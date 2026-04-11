@@ -1,0 +1,185 @@
+﻿@model AddressViewModel
+
+<!-- Main Start -->
+<main id="main"
+      style="background: url(~/assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container" style="max-width: 114rem;">
+        <section id="user-panel">
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title" style="font-size: 17px;text-transform: uppercase;">
+                        İstifadəçi Paneli
+                    </h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Xaricdəki ünvanlar</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Aside -->
+                <div class="col-md-4 col-lg-3 col-12">
+                    @await Component.InvokeAsync("UserAside")
+                </div>
+                <!-- Content -->
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div>
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-lg-12 col-12">
+                                    <div>
+                                        <ul id="headerList" class="nav nav-tabs card-tabs-nav">
+                                            @if (Model?.CountryAddress?.Any() == true)
+                                            {
+                                                @foreach (var countryGroup in Model.CountryAddress
+                                                                                            .GroupBy(x => x.CountryName)
+                                                                                            .Select((g, i) => new { Group = g, Index = i }))
+                                                {
+                                                    <li class="nav-item @(countryGroup.Index == 0 ? "active" : "")">
+                                                        <a href="#"
+                                                           class="nav-link @(countryGroup.Index == 0 ? "active" : "")"
+                                                           data-target="@(countryGroup.Index + 1)">
+
+                                                            <img src="@(countryGroup.Group.Key == "Türkiyə"
+                                                                                                                                                                      ? Url.Content("~/assets/images/tr-circle.svg")
+                                                                                                                                                                      : countryGroup.Group.Key == "ABŞ"
+                                                                                                                                                                          ? Url.Content("~/assets/images/usa-circle.svg")
+                                                                                                                                                                          : Url.Content("~/assets/images/default-circle.svg"))"
+                                                         class="card-tabs-nav-icon"
+                                                         alt="@countryGroup.Group.Key" />
+
+                                                            <span class="card-tabs-nav-title">
+                                                                @(countryGroup.Group.Key ?? "Unknown")
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                                                        }
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="tab-content card-tabs-body">
+                                        @if (Model?.CountryAddress?.Any() == true)
+                                        {
+                                            @foreach (var countryGroup in Model.CountryAddress
+                                                                                    .GroupBy(x => x.CountryName)
+                                                                                    .Select((g, i) => new { Group = g, Index = i }))
+                                            {
+                                                var countryName = countryGroup.Group.Key ?? "Unknown";
+                                                var isTurkey = countryName.ToLower() == "turkey" || countryName.ToLower() == "türkiyə";
+
+                                                <div class="tab-pane @(countryGroup.Index == 0 ? "active active-tab" : "active-tab")"
+                                                     data-id="@(countryGroup.Index + 1)">
+
+                                                    @foreach (var address in countryGroup.Group)
+                                                    {
+                                                        <div class="card order-item order-item-address address-block">
+
+                                                            <div class="card-header">
+                                                                <div class="custom-list-group">
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "Ad, Soyad" : "Name")
+                                                                        </h5>
+                                                                        <div class="order-item-copy">
+                                                                            <p class="order-item-value noselect">
+                                                                                @(Model?.Customer?.CustomerCode ?? "N/A") - LİMAK TAŞIMACILIK DIŞ TİCARET LİMİTED ŞİRKETİ
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "Adres başlığı" : "Address Line")
+                                                                        </h5>
+                                                                        <div class="order-item-copy">
+                                                                            <p class="order-item-value noselect">
+                                                                                LİMAK - @(Model?.Customer?.CustomerCode ?? "N/A") - @(Model?.Customer?.FirstName ?? "") @(Model?.Customer?.LastName ?? "")
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "Adres satır 1" : "Address Line 2")
+                                                                        </h5>
+                                                                        <p class="order-item-label-info">
+                                                                            ( Müştəri kodu, ad və soyadınızla birgə tam olaraq kopyalayın )
+                                                                        </p>
+                                                                        <div class="order-item-copy">
+                                                                            <p class="order-item-value noselect">
+                                                                                @(Model?.Customer?.CustomerCode ?? "")
+                                                                                @(Model?.Customer?.FirstName ?? "")
+                                                                                @(Model?.Customer?.LastName ?? ""),
+                                                                                @(address?.Address ?? "")
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card-footer">
+                                                                <div class="list-group list-group-horizontal">
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "İl-Şehir" : "City")
+                                                                        </h5>
+                                                                        <p class="order-item-value">
+                                                                            @(address?.City ?? "N/A")
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "Semt" : "State")
+                                                                        </h5>
+                                                                        <p class="order-item-value">
+                                                                            @(address?.State ?? "N/A")
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div class="list-group-item">
+                                                                        <h5 class="order-item-label">
+                                                                            @(isTurkey ? "TC kimlik" : "Postal Code")
+                                                                        </h5>
+                                                                        <p class="order-item-value">
+                                                                            @(string.IsNullOrEmpty(address?.TC) ? "N/A" : address.TC)
+                                                                        </p>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="tab-pane active active-tab" data-id="1">
+                                                <div class="card order-item order-item-address address-block">
+                                                    <div style="padding: 40px; text-align: center; color: #7f8c8d;">
+                                                        <p>No addresses available. Please add a country address first.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<!-- Main End -->

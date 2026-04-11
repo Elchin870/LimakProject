@@ -1,0 +1,282 @@
+﻿@using Limak.Application.Dtos.PackageDtos
+@model AdminCreatePackageDto
+
+@{
+    ViewData["Title"] = "Paket Yaradın";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-plus-circle me-2"></i>Yeni Paket Yaradın
+                </h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item">
+                            <a asp-area="Admin" asp-controller="Package" asp-action="Index">Paketlər</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Yarat</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light border-bottom">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-plus me-2"></i>Paket Məlumatı
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Validation Summary -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            <strong>Validasiya Xətası</strong>
+                            <div asp-validation-summary="All"></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" asp-controller="Package" asp-area="Admin" method="post">
+                        <!-- Customer Code Section -->
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small mb-3">
+                                <i class="bi bi-person me-2"></i>Müştəri Məlumatı
+                            </h6>
+                            <div class="form-group">
+                                <label asp-for="CustomerCode" class="form-label fw-600">
+                                    Müştəri Kodu <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="CustomerCode"
+                                       class="form-control form-control-lg"
+                                       placeholder="Müştəri kodunu daxil edin (məs., CUST001)"
+                                       required>
+                                <span asp-validation-for="CustomerCode" class="text-danger small mt-1 d-block"></span>
+                                <small class="text-muted">Müştərinin unikal identifikatoru</small>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Store Details Section -->
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small mb-3">
+                                <i class="bi bi-shop me-2"></i>Mağaza və Məhsul Məlumatı
+                            </h6>
+                            <div class="form-group mb-3">
+                                <label asp-for="StoreName" class="form-label fw-600">
+                                    Mağaza Adı <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="StoreName"
+                                       class="form-control form-control-lg"
+                                       placeholder="Mağaza adını daxil edin (məs., Amazon, eBay)"
+                                       required>
+                                <span asp-validation-for="StoreName" class="text-danger small mt-1 d-block"></span>
+                                <small class="text-muted">Paketin sifariş edildiyi mağazanın adı</small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Quantity" class="form-label fw-600">
+                                            Miqdar <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Quantity"
+                                               type="number"
+                                               class="form-control form-control-lg"
+                                               placeholder="1"
+                                               min="1"
+                                               required>
+                                        <span asp-validation-for="Quantity" class="text-danger small mt-1 d-block"></span>
+                                        <small class="text-muted">Paketdə olan əşyaların sayı</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label asp-for="Price" class="form-label fw-600">
+                                            Qiymət (AZN) <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Price"
+                                               type="number"
+                                               class="form-control form-control-lg"
+                                               placeholder="0.00"
+                                               step="0.01"
+                                               min="0"
+                                               required>
+                                        <span asp-validation-for="Price" class="text-danger small mt-1 d-block"></span>
+                                        <small class="text-muted">Bütün əşyaların ümumi bəyan edilmiş dəyəri</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Destination Section -->
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted small mb-3">
+                                <i class="bi bi-geo-alt me-2"></i>Sifariş Ölkəsi
+                            </h6>
+                            <div class="form-group">
+                                <label asp-for="CountryId" class="form-label fw-600">
+                                    Ölkə <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="CountryId"
+                                        class="form-select form-select-lg"
+                                        asp-items="@(ViewBag.Countries as List<SelectListItem>)"
+                                        required>
+                                    <option value="">-- Sifariş Ölkəsini Seçin --</option>
+                                </select>
+                                <span asp-validation-for="CountryId" class="text-danger small mt-1 d-block"></span>
+                                <small class="text-muted">Bu paketin sifariş ölkəsi</small>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex gap-2 mt-5 pt-3 border-top">
+                            <button type="submit" class="btn btn-lg btn-success flex-grow-1">
+                                <i class="bi bi-check-circle me-2"></i>Paket Yaradın
+                            </button>
+                            <a asp-area="Admin" asp-controller="Package" asp-action="Index" class="btn btn-lg btn-outline-secondary">
+                                <i class="bi bi-x-circle me-2"></i>Ləğv Et
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Helpful Information Sidebar -->
+        <div class="col-lg-4">
+            <!-- Info Box -->
+            <div class="card border-0 shadow-sm mb-4 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title fw-600 mb-3">
+                        <i class="bi bi-info-circle me-2 text-info"></i>Paket Yaratma Təlimatı
+                    </h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            <strong>Müştəri Kodu:</strong> Sistemdə mövcud olmalıdır
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            <strong>Mağaza Adı:</strong> Müştərinin sifariş verdiyi yer
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            <strong>Miqdar:</strong> Paketdə olan əşyaların sayı
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            <strong>Bəyan Edilmiş Qiymət:</strong> Bütün əşyaların ümumi dəyəri
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check2 text-success me-2"></i>
+                            <strong>Ölkə:</strong> Paket üçün sifariş ölkəsi
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Status Info -->
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="card-title fw-600 mb-2">
+                        <i class="bi bi-hourglass-split me-2"></i>İlkin Status
+                    </h6>
+                    <p class="small mb-0">
+                        Yeni paketlər <strong>"Bəyan Etməyi Gözləyir"</strong> statusu ilə yaradılır. Müştəri paketin daha da irəliləməsi üçün paketi bəyan etməlidir.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control-lg,
+    .form-select-lg {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+    }
+
+        .form-control-lg:focus,
+        .form-select-lg:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .form-control-lg::placeholder {
+            color: #6c757d;
+        }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .fw-600 {
+        font-weight: 600;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+
+    .card-header {
+        background-color: #f8f9fa !important;
+        border-bottom: 1px solid #dee2e6 !important;
+    }
+
+    .breadcrumb {
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+        padding: 0 0.5rem;
+    }
+
+    .alert {
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .gap-2 {
+        gap: 0.5rem !important;
+    }
+
+    .gap-3 {
+        gap: 1rem !important;
+    }
+
+    @@media (max-width: 768px) {
+        .col-lg-4 {
+            margin-top: 2rem;
+        }
+
+        .d-flex {
+            flex-direction: column;
+        }
+
+        .btn-lg {
+            padding: 0.75rem 1rem;
+        }
+    }
+</style>

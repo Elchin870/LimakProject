@@ -1,0 +1,16 @@
+.button {
+  display: flex;
+  align-items: center;
+  height: 4.5rem;
+  padding: 0 3rem;
+  color: $color-secondary;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 2rem;
+  cursor: pointer;
+  background: #ffffff;
+  border: 0.2rem solid $color-secondary;
+  border-radius: 0.8rem;
+  margin-left: 3.8rem;
+  text-decoration: none;
+}

@@ -1,0 +1,299 @@
+﻿@model BalanceViewModel
+<!-- Main Start -->
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container" style="max-width: 114rem;">
+        <section id="user-panel">
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title" style="font-size: 17px;text-transform: uppercase;">
+                        İstifadəçi Paneli
+                    </h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Balansınız</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Aside -->
+                <div class="col-md-4 col-lg-3 col-12">
+                    @await Component.InvokeAsync("UserAside")
+                </div>
+                <!-- Content -->
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div>
+                        <div class="content">
+                            <div class="balance-orange">
+                                <div class="card order-item order-item-balance">
+                                    <div class="card-body" style="padding: 2rem !important;">
+                                        <div class="row">
+                                            <div class="col-lg-6 col-12">
+                                                <div class="balance-card">
+                                                    <div class="balance-card-header">
+                                                        <div class="balance-card-total">
+                                                            <h3 class="balance-card-title">Balansım</h3>
+                                                            <div class="balance-card-total-price">
+                                                                <span>
+                                                                    @Model.Customer.Balance <sup class="manat">₼</sup>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="balance-card-date">
+                                                            <p>Son əlavə tarixi</p>
+                                                            <strong>@Model.Payment.CreatedDate.ToString("yyyy-MM-dd")</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="balance-card-body">
+                                                        <p class="balance-card-text">
+                                                            Azərbaycana çatdırılma haqqının
+                                                            ödənilməsi və online kuryer sifarişi üçün balansınızı
+                                                            artıra
+                                                            bilərsiniz.
+                                                        </p>
+                                                        <h4 class="balance-card-note upper">
+                                                            ARTIRILAN BALANS GERİ
+                                                            QAYTARILMIR.
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12">
+                                                <div class="balance-card">
+                                                    <div class="balance-card-header">
+                                                        <div class="balance-card-total">
+                                                            <h3 class="balance-card-title">Bonuslarım</h3>
+                                                            <div class="balance-card-total-price">
+                                                                <span>
+                                                                    0.00
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="balance-card-total ">
+                                                            <h3 class="balance-card-title">Gözləmədə</h3>
+                                                            <div class="balance-card-total-price">
+                                                                <span>
+                                                                    0.00
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="balance-card-body">
+                                                        <h4 class="balance-card-note upper">
+                                                            QAZANILAN BONUSLARLA
+                                                            BALANSINIZI ARTIRA BİLƏRSİNİZ
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card order-item order-item-payment">
+                                <div class="card-body">
+                                    <h3 class="balance-payment-title">
+                                        Ödəniş üçün balans artımı
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-12">
+                                            <div class="balance-payment-form">
+                                                <form asp-controller="Balance" asp-action="CreatePayment" method="post">
+                                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <input id="amountAZN" name="amount"
+                                                                   type="number" placeholder="AZN" required="required"
+                                                                   aria-required="true"
+                                                                   class="form-control"
+                                                                   style="background-color: white;">
+                                                        </div>
+                                                    </div>
+                                                    <button type="submit"
+                                                            class="btn btn-submit btn-block btn-primary">
+                                                        Balansı artır
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-12">
+                                            <div class="balance-payment">
+                                                <div class="balance-payment-card">
+                                                    <img src="~/assets/images/visa-2.svg" alt="">
+                                                    <img src="~/assets/images/mastercard-2.svg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="balance-list">
+                                <div class="card order-item order-item-table">
+                                    <div class="card-body">
+                                        <div class="balance-filter">
+                                            <select class="custom-select" id="filterSelect" onchange="applyFilter()">
+                                                @if (Model.FilterType == 0)
+                                                {
+                                                    <option value="0" selected>Hamısı</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="0">Hamısı</option>
+                                                }
+                                                
+                                                @if (Model.FilterType == 2)
+                                                {
+                                                    <option value="2" selected>Mədaxil</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="2">Mədaxil</option>
+                                                }
+                                                
+                                                @if (Model.FilterType == 1)
+                                                {
+                                                    <option value="1" selected>Məxaric</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="1">Məxaric</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <div class="table-responsive">
+                                                <table role="table" aria-busy="false" aria-colcount="4"
+                                                       class="table b-table order-table" id="__BVID__451">
+                                                    <thead role="rowgroup" class="">
+                                                        <tr role="row" class="">
+                                                            <th role="columnheader" scope="col" aria-colindex="1"
+                                                                class="">
+                                                                <div>Əməliyyat</div>
+                                                            </th>
+                                                            <th role="columnheader" scope="col" aria-colindex="2"
+                                                                class="">
+                                                                <div>Məbləğ</div>
+                                                            </th>
+                                                            <th role="columnheader" scope="col" aria-colindex="3"
+                                                                class="">
+                                                                <div>Tarix</div>
+                                                            </th>
+                                                            <th role="columnheader" scope="col" aria-colindex="4"
+                                                                class="">
+                                                                <div>Saat</div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody role="rowgroup">
+                                                        @if (Model.BalanceTransactions != null && Model.BalanceTransactions.Count > 0)
+                                                        {
+                                                            @foreach (var transaction in Model.BalanceTransactions)
+                                                            {
+                                                                <tr role="row" class="">
+                                                                    <td aria-colindex="1" role="cell" class="">
+                                                                        @transaction.Description
+                                                                    </td>
+                                                                    <td aria-colindex="2" role="cell" class="">@transaction.Amount</td>
+                                                                    <td aria-colindex="3" role="cell" class="">
+                                                                        @transaction.CreatedAt.ToString("dd.MM.yyyy")
+                                                                    </td>
+                                                                    <td aria-colindex="4" role="cell" class="">@transaction.CreatedAt.ToString("HH:mm:ss")</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr role="row" class="">
+                                                                <td colspan="4" aria-colindex="1" role="cell" class="" style="text-align: center; padding: 2rem;">
+                                                                    Heç bir əməliyyat tapılmadı
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        @if (Model.TotalPages > 1)
+                                        {
+                                            <div class="pagination-container" style="display: flex; justify-content: center; align-items: center; margin-top: 1.5rem; gap: 0.5rem;">
+                                                @if (Model.CurrentPage > 1)
+                                                {
+                                                    <a href="@Url.Action("Index", "Balance", new { page = 1, filterType = Model.FilterType })" class="pagination-link" style="padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333;">
+                                                        «
+                                                    </a>
+                                                    <a href="@Url.Action("Index", "Balance", new { page = Model.CurrentPage - 1, filterType = Model.FilterType })" class="pagination-link" style="padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333;">
+                                                        ‹
+                                                    </a>
+                                                }
+
+                                                @{
+                                                    int startPage = Math.Max(1, Model.CurrentPage - 2);
+                                                    int endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+                                                    
+                                                    if (startPage > 1)
+                                                    {
+                                                        <span style="padding: 0.5rem 0.75rem;">...</span>
+                                                    }
+
+                                                    for (int i = startPage; i <= endPage; i++)
+                                                    {
+                                                        if (i == Model.CurrentPage)
+                                                        {
+                                                            <span class="pagination-current" style="padding: 0.5rem 0.75rem; border: 1px solid #ff6b35; background-color: #ff6b35; color: white; border-radius: 4px; font-weight: bold;">
+                                                                @i
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action("Index", "Balance", new { page = i, filterType = Model.FilterType })" class="pagination-link" style="padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333;">
+                                                                @i
+                                                            </a>
+                                                        }
+                                                    }
+
+                                                    if (endPage < Model.TotalPages)
+                                                    {
+                                                        <span style="padding: 0.5rem 0.75rem;">...</span>
+                                                    }
+                                                }
+
+                                                @if (Model.CurrentPage < Model.TotalPages)
+                                                {
+                                                    <a href="@Url.Action("Index", "Balance", new { page = Model.CurrentPage + 1, filterType = Model.FilterType })" class="pagination-link" style="padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333;">
+                                                        ›
+                                                    </a>
+                                                    <a href="@Url.Action("Index", "Balance", new { page = Model.TotalPages, filterType = Model.FilterType })" class="pagination-link" style="padding: 0.5rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333;">
+                                                        »
+                                                    </a>
+                                                }
+                                            </div>
+                                        }
+
+                                        <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                                            Səhifə @Model.CurrentPage / @Model.TotalPages - Cəmi: @Model.TotalItems əməliyyat
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<!-- Main End -->
+
+<script>
+    function applyFilter() {
+        const filterType = document.getElementById('filterSelect').value;
+        window.location.href = '@Url.Action("Index", "Balance")' + '?page=1&filterType=' + filterType;
+    }
+</script>

@@ -1,0 +1,159 @@
+.register {
+  .block {
+    .block-body {
+      .card-auth {
+        padding: 60px 200px;
+
+        .card-auth-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+          .card-auth-title {
+            font-weight: bold;
+            font-size: 25px;
+            line-height: 42px;
+
+            &.upper {
+              text-transform: uppercase;
+            }
+          }
+        }
+        .form-reg {
+          .row {
+            .form-title {
+              font-weight: bold;
+              font-size: 16px;
+              line-height: normal;
+              padding-left: 11px;
+              position: relative;
+              margin-top: 25px;
+
+              &::before {
+                content: "";
+                width: 3px;
+                height: 16px;
+                background-color: #f05835;
+                position: absolute;
+                left: 0;
+                top: 1px;
+              }
+            }
+
+            .row {
+              .form-control {
+                display: block;
+                width: 100%;
+                transition: border-color 0.15s ease-in-out,
+                  box-shadow 0.15s ease-in-out;
+                background: #f5f5f7;
+                border: 1px solid #dfdfdf;
+                border-radius: 8px !important;
+                height: 50px;
+                font-size: 15px;
+                line-height: 17px;
+                padding: 15px;
+                color: #818181;
+                margin-top: 25px;
+                outline: none;
+              }
+              .pass {
+                position: relative;
+                input {
+                  position: relative;
+                }
+                .visiblity-btn {
+                  position: absolute;
+                  bottom: 0;
+                  right: 10px;
+                  width: 40px;
+                  height: 50px;
+                  z-index: 999;
+                  color: #373736;
+                  outline: 0;
+
+                  .show_p {
+                    width: 40px;
+                    height: 50px;
+                    display: block;
+                  }
+                  i {
+                    color: #c8c8c8;
+                    width: 40px;
+                    height: 50px;
+                    display: block;
+                  }
+                  .hide-eye {
+                    background: url(../../assets/images/opened.svg) center
+                      no-repeat;
+                  }
+                }
+              }
+              .custom-select {
+                display: inline-block;
+                padding: 0.5rem 2.9rem 0.5rem 1.2rem;
+                color: #495057;
+                vertical-align: middle;
+                transition: background-color 0.15s ease-in-out,
+                  border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                background-color: #f5f5f7;
+                background-image: url(../../assets/images/caret-down.svg);
+                outline: none;
+                background-repeat: no-repeat;
+                background-position-x: calc(100% - 15px);
+                background-position-y: center;
+                border: 1px solid #dfdfdf;
+                border-radius: 8px;
+                margin: 12px 0;
+                padding-left: 15px;
+                width: 100%;
+                height: 50px;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 17px;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                margin-top: 25px;
+                margin-bottom: 0;
+              }
+            }
+          }
+
+          .form-reg-footer {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center !important;
+
+            .btn {
+              display: inline-block;
+              text-align: center;
+              vertical-align: middle;
+              user-select: none;
+              transition: color 0.15s ease-in-out,
+                background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+            .btn-submit {
+              background: linear-gradient(180deg, #fc7b5d 0%, #f05835 100%);
+              border: none;
+              border-radius: 8px;
+              font-weight: 600;
+              font-size: 15px;
+              line-height: 18px;
+              padding: 16px 25px;
+            }
+            .form-reg-btn {
+              position: relative;
+              padding-left: 40px;
+              padding-right: 40px;
+              width: 100%;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
+    }
+  }
+}

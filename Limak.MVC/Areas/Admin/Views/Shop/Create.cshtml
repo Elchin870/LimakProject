@@ -1,0 +1,531 @@
+﻿@model ShopCreateDto
+
+<style>
+    .page-container {
+        padding: 30px 20px;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .form-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+    }
+
+    .form-title i {
+        color: #3498db;
+        font-size: 32px;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        max-width: 700px;
+    }
+
+    .form-card-header {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 24px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .form-card-body {
+        padding: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 28px;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e8eef5;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        background: #f8f9fb;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #3498db;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .form-input::placeholder {
+        color: #95a5a6;
+    }
+
+    select.form-input {
+        cursor: pointer;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 40px 20px;
+        border: 2px dashed #3498db;
+        border-radius: 8px;
+        background: #f0f8ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+        border-color: #2980b9;
+        background: #e6f3ff;
+    }
+
+    .file-input-label i {
+        font-size: 32px;
+        color: #3498db;
+        margin-right: 12px;
+    }
+
+    .file-input-label-text {
+        text-align: left;
+    }
+
+    .file-input-label-title {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .file-input-label-hint {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 4px;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .file-preview {
+        margin-top: 16px;
+        padding: 12px;
+        background: #f0f8ff;
+        border: 1px solid #3498db;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .file-preview.show {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .file-preview-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 6px;
+        object-fit: cover;
+    }
+
+    .file-preview-info {
+        flex: 1;
+    }
+
+    .file-preview-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 13px;
+        word-break: break-all;
+    }
+
+    .file-preview-size {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 4px;
+    }
+
+    .file-preview-remove {
+        background: #f8d7da;
+        color: #721c24;
+        border: none;
+        border-radius: 6px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .file-preview-remove:hover {
+        background: #f5c2c7;
+    }
+
+    .validation-summary {
+        background: #f8d7da;
+        border-left: 4px solid #dc3545;
+        padding: 16px;
+        border-radius: 6px;
+        margin-bottom: 24px;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .validation-summary ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .validation-summary li {
+        color: #721c24;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .validation-summary li:last-child {
+        margin-bottom: 0;
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .field-error {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 6px;
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .form-input.is-invalid {
+        border-color: #dc3545;
+        background: #fff8f8;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 1px solid #e8eef5;
+        flex-wrap: wrap;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        padding: 14px 40px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+        color: white;
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .btn-cancel {
+        background: white;
+        color: #3498db;
+        padding: 14px 40px;
+        border: 2px solid #3498db;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-cancel:hover {
+        background: #f0f8ff;
+        transform: translateY(-2px);
+        color: #3498db;
+    }
+
+    .form-info {
+        background: #d1ecf1;
+        border-left: 4px solid #3498db;
+        padding: 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #0c5aa0;
+        margin-bottom: 28px;
+    }
+
+    .form-info i {
+        margin-right: 8px;
+    }
+
+    @@media (max-width: 600px) {
+        .page-container {
+            padding: 20px 16px;
+        }
+
+        .form-card-body {
+            padding: 24px;
+        }
+
+        .form-title {
+            font-size: 22px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-submit,
+        .btn-cancel {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .file-input-label {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .file-input-label-text {
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <!-- Form Header -->
+    <div class="form-header">
+        <h1 class="form-title">
+            <i class="mdi mdi-store-plus"></i>
+            Yeni Mağaza Yarat
+        </h1>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="form-card-header">
+            <i class="mdi mdi-information-outline" style="margin-right: 8px;"></i>
+            Aşağıda mağaza məlumatlarını daxil edin
+        </div>
+
+        <div class="form-card-body">
+            <!-- Info Alert -->
+            <div class="form-info">
+                <i class="mdi mdi-lightbulb-outline"></i>
+                Mağaza haqqında dəqiq məlumatlar təqdim edin, o cümlədən adı, kateqoriyası, veb-saytı və şəkli.
+            </div>
+
+            <!-- Form -->
+            <form method="post" asp-area="Admin" asp-controller="Shop" asp-action="Create" enctype="multipart/form-data">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <!-- Shop Name Field -->
+                <div class="form-group">
+                    <label asp-for="Name" class="form-label">
+                        <i class="mdi mdi-store" style="margin-right: 6px;"></i>
+                        Mağaza Adı
+                    </label>
+                    <input asp-for="Name" class="form-input" placeholder="Mağaza adını daxil edin (məsələn, Amazon, eBay)">
+                    <span asp-validation-for="Name" class="field-error"></span>
+                </div>
+
+                <!-- Category Field -->
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="form-label">
+                        <i class="mdi mdi-tag" style="margin-right: 6px;"></i>
+                        Kateqoriya
+                    </label>
+                    <select asp-for="CategoryId" class="form-input">
+                        <option value="">-- Kateqoriya seçin --</option>
+                        @foreach (var category in (List<CategoryGetDto>)ViewBag.Categories ?? new List<CategoryGetDto>())
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CategoryId" class="field-error"></span>
+                </div>
+
+                <!-- Website Path Field -->
+                <div class="form-group">
+                    <label asp-for="WebsitePath" class="form-label">
+                        <i class="mdi mdi-link-variant" style="margin-right: 6px;"></i>
+                        Vebsayt URL
+                    </label>
+                    <input asp-for="WebsitePath" class="form-input" placeholder="Vebsayt URL-sini daxil edin (məsələn, https://example.com)">
+                    <span asp-validation-for="WebsitePath" class="field-error"></span>
+                </div>
+
+                <!-- Image Upload Field -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="mdi mdi-image-plus" style="margin-right: 6px;"></i>
+                        Mağaza Şəkli
+                    </label>
+                    <div class="file-input-wrapper">
+                        <label for="shopImageInput" class="file-input-label">
+                            <i class="mdi mdi-cloud-upload"></i>
+                            <div class="file-input-label-text">
+                                <div class="file-input-label-title">Yükləmək üçün vurun və ya sürükləyib buraxın</div>
+                                <div class="file-input-label-hint">PNG, JPG, GIF, maksimum 2MB</div>
+                            </div>
+                        </label>
+                        <input type="file" id="shopImageInput" asp-for="Image" accept="image/*">
+                        <div id="filePreview" class="file-preview">
+                            <img id="previewImage" class="file-preview-image" src="" alt="Preview">
+                            <div class="file-preview-info">
+                                <div class="file-preview-name" id="previewName"></div>
+                                <div class="file-preview-size" id="previewSize"></div>
+                            </div>
+                            <button type="button" class="file-preview-remove" onclick="clearFileInput()">
+                                <i class="mdi mdi-delete" style="margin-right: 4px;"></i>
+                                Sil
+                            </button>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Image" class="field-error"></span>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="mdi mdi-check"></i>
+                        Mağazanı Yarat
+                    </button>
+                    <a asp-area="Admin" asp-controller="Shop" asp-action="Index" class="btn-cancel">
+                        <i class="mdi mdi-close"></i>
+                        İmtina et
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('shopImageInput');
+    const filePreview = document.getElementById('filePreview');
+    const previewImage = document.getElementById('previewImage');
+    const previewName = document.getElementById('previewName');
+    const previewSize = document.getElementById('previewSize');
+
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewName.textContent = file.name;
+                previewSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                filePreview.classList.add('show');
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function clearFileInput() {
+        fileInput.value = '';
+        filePreview.classList.remove('show');
+    }
+
+    // Drag and drop functionality
+    const fileLabel = document.querySelector('.file-input-label');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, () => {
+            fileLabel.style.borderColor = '#2980b9';
+            fileLabel.style.background = '#e6f3ff';
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, () => {
+            fileLabel.style.borderColor = '#3498db';
+            fileLabel.style.background = '#f0f8ff';
+        });
+    });
+
+    fileLabel.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+
+        // Trigger change event
+        const event = new Event('change', { bubbles: true });
+        fileInput.dispatchEvent(event);
+    });
+</script>

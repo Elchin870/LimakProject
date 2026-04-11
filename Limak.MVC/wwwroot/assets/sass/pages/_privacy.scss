@@ -1,0 +1,55 @@
+#main {
+  .main-container {
+    .privacy {
+      .block {
+        .block-body {
+          .card {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            border-radius: 0.25rem;
+            background: #fff;
+            border-radius: 8px;
+
+            .card-body {
+              -ms-flex: 1 1 auto;
+              flex: 1 1 auto;
+              min-height: 1px;
+              padding: 45px 64px 80px;
+
+              .card-text {
+                color: #373736;
+                font-size: 15px;
+                line-height: 22px;
+                margin-top: 25px;
+                background: url(../../assets/images/disc-color.svg) no-repeat
+                  left 5px;
+                padding-left: 22px;
+                font-weight: 500;
+
+                h5 {
+                  font-size: 2rem;
+                }
+                p {
+                  margin-top: 0;
+                  margin-bottom: 1.6rem;
+                }
+
+                &:last-child {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

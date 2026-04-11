@@ -1,0 +1,108 @@
+﻿@model TariffViewModel
+<!-- Main Start -->
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container">
+        <!-- Currency -->
+        <div class="block">
+            <div class="block-header">
+                <h2 class="block-title">ÖLKƏLƏR ÜZRƏ TARİFLƏR</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <span>Tariflər</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="block-body">
+                <div class="currency-inner" style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center; max-width:1200px;margin:0 auto;">
+
+                    @foreach (var countryGroup in Model.Tariffs.GroupBy(x => x.CountryName))
+                    {
+                        <div class="tariff-card-modern">
+
+                            <div class="tariff-header-modern" style="display:flex; align-items:center; gap:10px;">
+
+                                <img src="@(countryGroup.Key == "Türkiyə"
+                                                                                                                               ? Url.Content("~/assets/images/tr-circle.svg")
+                                                                                                                               : Url.Content("~/assets/images/usa-circle.svg"))"
+                                 alt="@countryGroup.Key"
+                                 style="width:32px; height:32px;" />
+
+                                <h3 style="margin:0;">
+                                    @countryGroup.Key
+                                </h3>
+
+                            </div>
+
+                            <div class="delivery-toggle">
+                                <button class="delivery-btn active"
+                                        data-delivery="Filiala çatdırılma">
+                                    Filiala çatdırılma
+                                </button>
+
+                                <button class="delivery-btn"
+                                        data-delivery="Adresə çatdırılma">
+                                    Adresə çatdırılma
+                                </button>
+                            </div>
+
+                        @foreach (var deliveryGroup in countryGroup.GroupBy(x => x.DeliveryTypeName))
+                            {
+                                <div class="delivery-section"
+                                     data-section="@deliveryGroup.Key"
+                                     style="display:@(deliveryGroup.Key == "Filiala çatdırılma" ? "block" : "none")">
+
+                                    @foreach (var weightGroup in deliveryGroup
+                                                                .GroupBy(x => new { x.MinWeight, x.MaxWeight })
+                                                                .OrderBy(x => x.Key.MinWeight))
+                                    {
+                                        var standart = weightGroup
+                                        .FirstOrDefault(x => x.ShipmentTypeName == "Standart");
+
+                                        var maye = weightGroup
+                                        .FirstOrDefault(x => x.ShipmentTypeName == "Maye");
+
+                                        <div class="tariff-row-modern">
+
+                                            <div class="weight-col">
+                                                @weightGroup.Key.MinWeight -
+                                                @weightGroup.Key.MaxWeight kq
+
+                                                @if (weightGroup.Key.MinWeight == 1
+                                                                                    && weightGroup.Key.MaxWeight == 5000)
+                                                {
+                                                    <span class="per-kg-text">(Hər kq üçün)</span>
+                                                }
+                                            </div>
+
+                                            <div class="price-col">
+                                                <div class="price-box">
+                                                    <span>Standart</span>
+                                                    <strong>@(standart?.BasePrice ?? 0) ₼</strong>
+                                                </div>
+
+                                                <div class="price-box liquid">
+                                                    <span>Maye</span>
+                                                    <strong>@(maye?.BasePrice ?? 0) ₼</strong>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main End -->

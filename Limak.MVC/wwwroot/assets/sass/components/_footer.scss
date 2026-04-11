@@ -1,0 +1,102 @@
+footer {
+  display: flex;
+  align-items: center;
+  margin-top: 57px;
+  justify-content: center;
+  padding: 3.2rem 4rem 1.5rem;
+  background-color: $color-grey-80;
+  box-shadow: 0rem 0.4rem 1rem rgba($color: $color-grey-80, $alpha: 0.2);
+  border-radius: 0.8rem 0.8rem 0 0;
+
+  .container-footer {
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 74%;
+    flex-direction: column;
+    .footer-main {
+      display: flex;
+      align-items: flex-start;
+      //   justify-content: space-between;
+      width: 100%;
+
+      .footer-left {
+        // margin-right: 5rem;
+        .footer-logo {
+          display: inline-block;
+          margin-bottom: 2.2rem;
+        }
+        .footer-app {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          a {
+            margin-right: 1.5rem;
+          }
+        }
+      }
+      .footer-navigation-menu {
+        display: flex;
+        justify-content: space-between;
+        .footer-nav-list {
+          width: 17.5rem;
+          li {
+            a {
+              font-weight: 500;
+              font-size: 15px;
+              line-height: 30px;
+              color: rgba(255, 255, 255, 0.7);
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+      .footer-contact {
+        // padding-left: 17rem;
+        .hot-line {
+          display: block;
+          text-align: right;
+        }
+        .footer-social {
+          margin-top: 2.8rem;
+          display: flex;
+          justify-content: flex-end;
+          a {
+            margin-left: 1.4rem;
+          }
+          .resized-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+      }
+    }
+
+    .footer-bottom {
+      display: flex;
+      width: 100%;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-top: 2.6rem;
+      padding-top: 1.7rem;
+      border-top: 0.1rem solid #585858;
+      .footer-copy {
+        font-size: 1.3rem;
+        line-height: 2.2rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .footer-payment {
+        display: flex;
+        align-items: center;
+        img {
+          margin-left: 3rem;
+        }
+      }
+    }
+  }
+}

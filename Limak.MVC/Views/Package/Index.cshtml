@@ -1,0 +1,341 @@
+﻿@using System.Security.Claims
+@model PackageViewModel
+@using Limak.Domain.Enums;
+@{
+    var i = 0;
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<!-- Main Start -->
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container" style="max-width: 114rem;">
+        <section id="user-panel">
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title" style="font-size: 17px;text-transform: uppercase;">
+                        İstifadəçi Paneli
+                    </h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Bağlamalar</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Aside -->
+                <div class="col-md-4 col-lg-3 col-12">
+                    @await Component.InvokeAsync("UserAside")
+                </div>
+                <!-- Content -->
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div>
+                        <div class="content">
+                            <!-- Alert Messages -->
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert" style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px 20px; border-radius: 4px; margin-bottom: 20px; display: block;">
+                                    <strong>Uğurlu!</strong> @TempData["SuccessMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="document.getElementById('successAlert').style.display='none';" style="background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.5;">&times;</button>
+                                </div>
+                                <script>
+                                    // Auto-dismiss success alert after 5 seconds
+                                    setTimeout(function() {
+                                        const alert = document.getElementById('successAlert');
+                                        if (alert) {
+                                            alert.style.opacity = '1';
+                                            alert.style.transition = 'opacity 0.5s ease-out';
+                                            setTimeout(() => {
+                                                alert.style.opacity = '0';
+                                                setTimeout(() => alert.style.display = 'none', 500);
+                                            }, 4500);
+                                        }
+                                    }, 100);
+                                </script>
+                            }
+                            @if (TempData["ErrorMessage"] != null)
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert" style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px 20px; border-radius: 4px; margin-bottom: 20px; display: block;">
+                                    <strong>Xəta!</strong> @TempData["ErrorMessage"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="document.getElementById('errorAlert').style.display='none';" style="background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.5;">&times;</button>
+                                </div>
+                            }
+                            <!-- End Alert Messages -->
+                            <div class="row mb-20">
+                                <div>
+                                    <ul id="headerList" class="nav nav nav-tabs card-tabs-nav">
+                                        @foreach (var country in Model.Countries)
+                                        {
+                                            var isActive = country.Id == Model.Countries.FirstOrDefault()?.Id ? "active" : "";
+                                            var flagImage = country.Name.ToLower() switch
+                                            {
+                                                "türkiyə" or "turkey" => "tr-circle.svg",
+                                                "abş" or "united states" or "usa" => "usa-circle.svg",
+                                                _ => $"{country.Name.ToLower()}-circle.svg"
+                                            };
+                                            <li class="nav-item">
+                                                <a href="#" class="nav-link @isActive" data-target="@country.Id" onclick="filterByCountry('@country.Id'); return false;">
+                                                    <img src="~/assets/images/@flagImage" alt="@country.Name"
+                                                         class="card-tabs-nav-icon"
+                                                         onerror="this.src='~/assets/images/default-circle.svg'">
+                                                    <span class="card-tabs-nav-title">
+                                                        @country.Name
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="content-header custom-card" style="margin-bottom: 1rem;">
+                                <form action="" class="form-package">
+                                    <select id="statusFilter" name="status" class="custom-select" onchange="filterByStatus()">
+                                        <option value="">Hamısı</option>
+                                        <option value="@PackageStatus.ReadyForWarehouse">Anbar Üçün Hazır</option>
+                                        <option value="@PackageStatus.InWarehouse">Anbarda</option>
+                                        <option value="@PackageStatus.InTransit">Tranzitdə</option>
+                                        <option value="@PackageStatus.ArrivedToCountry">Ölkəyə Çatdı</option>
+                                        <option value="@PackageStatus.ReadyForDelivery">Təhvilə Hazır</option>
+                                        <option value="@PackageStatus.Delivered">Təhvil Verildi</option>
+                                        <option value="@PackageStatus.Cancelled">Ləğv Edildi</option>
+                                    </select>
+                                </form>
+                            </div>
+                            @foreach (var country in Model.Countries)
+                            {
+                                var isActiveTab = country.Id == Model.Countries.FirstOrDefault()?.Id ? "active active-tab" : "";
+                                var countryPackages = Model.UserPackages.Where(p => p.CountryName == country.Name).ToList();
+
+                                <div data-id="@country.Id" class="order-item order-item-package @isActiveTab" style="@(country.Id != Model.Countries.FirstOrDefault()?.Id ? "display:none;" : "")">
+                                    @if (countryPackages.Count == 0)
+                                    {
+                                        <div class="card mb20">
+                                            <div class="card mb20">
+                                                <div class="order-item-title">
+                                                    <h6>@country.Name: anbarda bəyan gözləyən bağlamanız yoxdur.</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="card mb20">
+                                            <div class="table-responsive">
+                                                <table class="table order-table package-table">
+                                                    <thead class="align-center mobile-none">
+                                                        <tr>
+                                                            <th scope="col">Sifariş№</th>
+                                                            <th scope="col">Çatdırılma</th>
+                                                            <th scope="col">Mağaza</th>
+                                                            <th scope="col">Status</th>
+                                                            <th scope="col">Əməliyyat</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="country-table-body" data-country="@country.Name">
+                                                        @foreach (var package in countryPackages)
+                                                        {
+                                                            var collapseId = "packageDetail_" + i;
+                                                            var statusText = GetStatusText(package.Status);
+
+                                                            <tr class="package-row" data-status="@package.Status">
+                                                                <td>
+                                                                    <div class="d-flex v-center">
+                                                                        <span>@package.OrderNumber</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="d-flex v-center">@package.ShippingPrice AZN</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="d-flex v-center">@package.StoreName</span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="d-flex v-center upper">@statusText</span>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="d-flex flex-end">
+                                                                        <button data-target="@collapseId"
+                                                                                class="btn btn-action btn-orange btn-secondary"
+                                                                                onclick="toggleDetails('@collapseId'); return false;">
+                                                                            <span>Bax</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="package-details" data-id="@collapseId" style="display:none;">
+                                                                <td colspan="6" class="padding-0">
+                                                                    <div data-id "@collapseId">
+                                                                        <table class="table order-table package-table">
+                                                                            <tbody class="detail-table">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <div class="detail-table-content">
+                                                                                            <strong>Sifariş tarixi</strong>
+                                                                                            <span>@package.CreatedAt.ToString("yy-MM-dd HH:mm:ss")</span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="detail-table-content">
+                                                                                            <strong>Çəkisi</strong>
+                                                                                            <span>@package.Weight кq</span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="detail-table-content">
+                                                                                            <strong>Qiymət AZN</strong>
+                                                                                            <span>@package.OrderPrice</span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="detail-table-content">
+                                                                                            <strong>İzləmə № </strong>
+                                                                                            <span>@package.TrackingNumber</span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td class="flex-end">
+                                                                        @if (package.IsPaid)
+                                                                        {
+                                                                            <button class="btn btn-action btn-secondary" disabled>
+                                                                                Ödənildi
+                                                                            </button>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <form asp-action="PayForPackage" asp-controller="Package" method="post" style="display:inline;" onsubmit="return confirmPayment(@package.ShippingPrice);">
+                                                                                <input type="hidden" name="PackageId" value="@package.Id" />
+                                                                                <input type="hidden" name="CustomerId" value="00000000-0000-0000-0000-000000000000" />
+                                                                                <button type="submit" class="btn btn-action btn-blue btn-secondary">
+                                                                                    Ödəniş et
+                                                                                </button>
+                                                                            </form>
+                                                                        }
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            i++;
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<!-- Main End -->
+
+<script>
+    function filterByCountry(countryId) {
+        document.querySelectorAll('.order-item-package').forEach(section => {
+            section.style.display = 'none';
+            section.classList.remove('active', 'active-tab');
+
+            section.querySelectorAll('.package-details').forEach(detailRow => {
+                detailRow.style.display = 'none';
+            });
+        });
+
+        const selectedSection = document.querySelector(`[data-id="${countryId}"]`);
+        if (selectedSection) {
+            selectedSection.style.display = 'block';
+            selectedSection.classList.add('active', 'active-tab');
+        }
+
+        document.querySelectorAll('#headerList .nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        event.target.closest('.nav-link').classList.add('active');
+
+        document.getElementById('statusFilter').value = '';
+        applyStatusFilter();
+    }
+
+    function filterByStatus() {
+        const selectedStatus = document.getElementById('statusFilter').value;
+        const activeCountrySection = document.querySelector('.order-item-package.active-tab');
+
+        if (!activeCountrySection) return;
+
+        const tableBody = activeCountrySection.querySelector('.country-table-body');
+        if (!tableBody) return;
+
+        const rows = tableBody.querySelectorAll('.package-row');
+
+        rows.forEach((row) => {
+            const status = row.getAttribute('data-status');
+            const collapseId = row.nextElementSibling?.getAttribute('data-id');
+            const detailRow = collapseId ? document.querySelector(`tr.package-details[data-id="${collapseId}"]`) : null;
+
+            if (selectedStatus === '' || status === selectedStatus) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+                if (detailRow) {
+                    detailRow.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    function applyStatusFilter() {
+        filterByStatus();
+    }
+
+    function toggleDetails(collapseId) {
+        const row = document.querySelector(`tr.package-details[data-id="${collapseId}"]`);
+
+        if (!row) return;
+
+        if (row.style.display === "none" || row.style.display === "") {
+            row.style.display = "table-row";
+        } else {
+            row.style.display = "none";
+        }
+    }
+
+    function confirmPayment(shippingPrice) {
+        return confirm(`Siz paket çatdırılması üçün ${shippingPrice} AZN qədər ödəniş edirsiniz. Razısınız mı?`);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstCountryId = document.querySelector('#headerList .nav-link')?.getAttribute('data-target');
+        if (firstCountryId) {
+            filterByCountry(firstCountryId);
+        }
+    });
+</script>
+
+@functions {
+    private string GetStatusText(PackageStatus status)
+    {
+        return status switch
+        {
+            PackageStatus.ReadyForWarehouse => "Anbar Üçün Hazır",
+            PackageStatus.InWarehouse => "Anbarda",
+            PackageStatus.InTransit => "Tranzitdə",
+            PackageStatus.ArrivedToCountry => "Ölkəyə Çatdı",
+            PackageStatus.ReadyForDelivery => "Təhvilə Hazır",
+            PackageStatus.Delivered => "Təhvil Verildi",
+            PackageStatus.Cancelled => "Ləğv Edildi",
+            PackageStatus.WaitingForDeclaration => "Bəyan Gözləmədə",
+            PackageStatus.Declared => "Bəyan Edildi",
+            PackageStatus.NeedCorrection => "Düzəliş Tələb Edir",
+            _ => status.ToString()
+        };
+    }
+}

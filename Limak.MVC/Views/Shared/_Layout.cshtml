@@ -1,0 +1,381 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Limak.Domain.Entities
+@inject UserManager<AppUser> UserManager
+
+@{
+    AppUser currentUser = null;
+
+    if (User.Identity.IsAuthenticated)
+    {
+        currentUser = await UserManager.GetUserAsync(User);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="https://limak.az/favicon.ico">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <title>Limak.az</title>
+    <style>
+        .tariff-card-modern {
+            width: 420px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .tariff-header-modern {
+            margin-bottom: 15px;
+        }
+
+            .tariff-header-modern h3 {
+                font-size: 20px;
+                font-weight: 600;
+            }
+
+        .delivery-toggle {
+            display: flex;
+            background: #f3f3f3;
+            border-radius: 30px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .delivery-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+            .delivery-btn.active {
+                background: #28a745;
+                color: #fff;
+            }
+
+        .tariff-row-modern {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .weight-col {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .price-col {
+            display: flex;
+            gap: 15px;
+        }
+
+        .price-box {
+            background: #f9f9f9;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+            .price-box span {
+                display: block;
+                font-size: 12px;
+                color: #777;
+            }
+
+            .price-box strong {
+                font-size: 14px;
+            }
+
+            .price-box.liquid {
+                background: #eef6ff;
+            }
+    </style>
+</head>
+
+<body>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <header class="fixed-top">
+            <nav class="navbar">
+                <div class="container-nav">
+                    <div class="navbar-wrapper row">
+                        <div class="navbar-logo col-md-2">
+                            <a asp-controller="Home" asp-action="Index" class="logo">
+                                <img src="~/assets/images/logo.svg" alt="">
+                            </a>
+                        </div>
+                        <ul class="nav-list col-md-4">
+                            <li class="nav-list-item"><a asp-controller="Tariff" asp-action="Index">Tariflər</a></li>
+                            <li class="nav-list-item"><a asp-controller="Calculator" asp-action="Index">Kalkulyator</a></li>
+                            <li class="nav-list-item"><a asp-controller="Shop" asp-action="Index">Mağazalar</a></li>
+                            <li class="nav-list-item"><a asp-controller="Contact" asp-action="Index">Əlaqə</a></li>
+                            <li class="nav-list-item"><a asp-controller="FAQ" asp-action="Index">FAQ</a></li>
+                        </ul>
+                        <div class="navbar-right-col col-md-6">
+                            <a href="#" class="navbar-contact-phone">
+                                <img src="~/assets/images/hot_line.svg" alt="">
+                            </a>
+                            <!-- Login time active -->
+                            <!-- <div class="user-panel-account">
+                                <div class="container-user-panel">
+                                    <div class="dropdown b-dropdown lang btn-group">
+                                        <button type="button" class="btn dropdown-toggle btn-primary user-panel-btn">
+                                            <span style="font-weight: 600;" id="userPanelBtn">Yusif Guluzada</span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right" id="userPanelList">
+                                            <li class="lang-dropdown"><a href="user-panel.html"
+                                                    class="dropdown-item"><span>İstifadəçi
+                                                        paneli</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="#"
+                                                    class="dropdown-item"><span>Sifarişlər</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="report.html"
+                                                    class="dropdown-item"><span>Bəyan
+                                                        Gözləyən</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="package.html"
+                                                    class="dropdown-item"><span>Bağlamalar</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="adress.html"
+                                                    class="dropdown-item"><span>Xaricdəki
+                                                        Ünvanlar</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="courier.html"
+                                                    class="dropdown-item"><span>Kuryer</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="up-setting.html"
+                                                    class="dropdown-item"><span>Tənzimləmələr</span></a>
+                                            </li>
+                                            <li class="lang-dropdown"><a href="#" class="dropdown-item"><span>Hesabdan
+                                                        çıx</span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <a asp-controller="Account" asp-action="Login" class="button">Daxil ol</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+    else if (User.IsInRole("Member"))
+    {
+        <header class="fixed-top">
+            <div class="user-panel-account">
+                <div class="container-user-panel">
+                    <div class="dropdown b-dropdown lang btn-group">
+                        <button type="button" class="btn dropdown-toggle btn-primary user-panel-btn">
+                            <span style="font-weight: 600;" id="userPanelBtn">@currentUser?.FirstName @currentUser?.LastName</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" id="userPanelList">
+                            <li class="lang-dropdown">
+                                <a asp-controller="UserPanel" asp-action="Index" class="dropdown-item">
+                                    <span>
+                                        İstifadəçi
+                                        paneli
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <a asp-controller="UserPanel" asp-action="Index" class="dropdown-item"><span>Sifarişlər</span></a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <a asp-controller="Declare" asp-action="Index" class="dropdown-item">
+                                    <span>
+                                        Bəyan
+                                        Gözləyən
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <a asp-controller="Package" asp-action="Index"
+                                   class="dropdown-item"><span>Bağlamalar</span></a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <a asp-controller="Address" asp-action="Index" class="dropdown-item">
+                                    <span>
+                                        Xaricdəki
+                                        Ünvanlar
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <a asp-controller="Settings" asp-action="Index"
+                                   class="dropdown-item"><span>Tənzimləmələr</span></a>
+                            </li>
+                            <li class="lang-dropdown">
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item">Hesabdan çıx</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar" id="userPanel-nav">
+                <div class="container-nav">
+                    <div class="navbar-wrapper row">
+                        <div class="navbar-logo col-md-2">
+                            <a asp-controller="Home" asp-action="Index" class="logo">
+                                <img src="~/assets/images/logo.svg" alt="">
+                            </a>
+                        </div>
+                        <ul class="nav-list col-md-5" style="justify-content: flex-start;">
+                            <li class="nav-list-item"><a asp-controller="Tariff" asp-action="Index">Tariflər</a></li>
+                            <li class="nav-list-item"><a asp-controller="Calculator" asp-action="Index">Kalkulyator</a></li>
+                            <li class="nav-list-item"><a asp-controller="Shop" asp-action="Index">Mağazalar</a></li>
+                            <li class="nav-list-item"><a asp-controller="Contact" asp-action="Index">Əlaqə</a></li>
+                            <li class="nav-list-item"><a asp-controller="FAQ" asp-action="Index">FAQ</a></li>
+                        </ul>
+                        <div class="navbar-right-col col-md-5" style="padding-left: 0;">
+
+                            <a href="#" class="navbar-contact-phone">
+                                <img src="~/assets/images/hot-line-panel.svg" alt="">
+                            </a>
+
+                            <a asp-controller="UserPanel"
+                               asp-action="Create"
+                               class="btn btn-header-danger">
+                                SİFARİŞ ET
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    }
+    <!-- Header Start -->
+    <!-- Header End -->
+    @RenderBody()
+    <!-- Footer Start -->
+    <footer style="margin-top: 0;">
+        <div class="container-footer">
+            <div class="footer-main row">
+                <div class="footer-left col-md-4">
+                    <a href="index.html" class="footer-logo">
+                        <img src="~/assets/images/logo-white.svg" alt="">
+                    </a>
+                    <div class="footer-app">
+                        <a href="#">
+                            <img src="~/assets/images/app-store.svg" alt="">
+                        </a>
+                        <a href="#">
+                            <img src="~/assets/images/google-play.svg" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-navigation-menu col-md-4">
+                    <ul class="footer-nav-list">
+                        <li><a asp-controller="Tariff" asp-action="Index">Tariflər</a></li>
+                        <li><a asp-controller="Shop" asp-action="Index">Kalkulyator</a></li>
+                        <li><a asp-controller="Shop" asp-action="Index">Mağazalar</a></li>
+                    </ul>
+                    <ul class="footer-nav-list">
+                        <li><a asp-controller="Term" asp-action="Index">Qaydalar</a></li>
+                        <li><a asp-controller="About" asp-action="Index">Haqqımızda</a></li>
+                        <li><a asp-controller="FAQ" asp-action="Index">FAQ</a></li>
+                    </ul>
+                    <ul class="footer-nav-list">
+                        <li><a asp-controller="Privacy" asp-action="Index">Gizlilik şərtləri</a></li>
+                        <li><a asp-controller="Contact" asp-action="Index">Əlaqə</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact col-md-4">
+                    <a href="#" class="hot-line">
+                        <img src="~/assets/images/hot-line.svg" alt="">
+                    </a>
+                    <div class="footer-social">
+                        <a href="#"><img src="~/assets/images/facebook.svg" alt=""></a>
+                        <a href="#"><img src="~/assets/images/instagram.svg" alt=""></a>
+                        <a href="#"><img src="~/assets/images/telegram.png" alt="" class="resized-icon"></a>
+                        <a href="#"><img src="~/assets/images/twitter.svg" alt=""></a>
+                        <a href="#"><img src="~/assets/images/youtube.svg" alt=""></a>
+                        <a href="#"><img src="~/assets/images/tik-tok.png" alt="" class="resized-icon"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    © 2018 - 2021 Limak.az | Bütün hüquqlar qorunur
+                </div>
+                <div class="footer-payment">
+                    <img src="~/assets/images/visa.svg" alt="">
+                    <img src="~/assets/images/mastercard.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End -->
+    <script src="~/assets/js/index.js"></script>
+    <script src="~/assets/js/main.js"></script>
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        document.querySelectorAll(".delivery-btn")
+            .forEach(btn => {
+
+                btn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+
+                    let card = this.closest(".tariff-card-modern");
+
+                    card.querySelectorAll(".delivery-btn")
+                        .forEach(b => b.classList.remove("active"));
+
+                    this.classList.add("active");
+
+                    let type = this.dataset.delivery;
+
+                    card.querySelectorAll(".delivery-section")
+                        .forEach(sec => {
+
+                            sec.style.display =
+                                sec.dataset.section === type
+                                ? "block"
+                                : "none";
+                        });
+                });
+            });
+    </script>
+
+    <script>
+        document.querySelectorAll('.nav-item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                document.querySelectorAll('.nav-item a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+
+                const targetCategory = this.parentElement.getAttribute('data-target-item');
+
+                document.querySelectorAll('.item-box').forEach(box => {
+                    if (targetCategory === 'all' || box.getAttribute('data-item') === targetCategory) {
+                        box.style.display = 'block';
+                    } else {
+                        box.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

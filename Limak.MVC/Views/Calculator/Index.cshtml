@@ -1,0 +1,161 @@
+﻿@model CalculatorViewModel
+<!-- Main Start -->
+<main id="main"
+      style="background: url(~/assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container">
+        <div class="calculator">
+            <div class="block">
+                <!-- Block Header -->
+                <div class="block-header">
+                    <h2 class="title page-title">Kalkulyator</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Kalkulyator</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Block Body -->
+                <div class="block-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-12">
+                            <div class="card mb-20">
+                                <div asp-validation-summary="All"></div>
+                                <form method="post" asp-controller="Calculator" asp-action="Calculate" class="form-calc">
+                                    <div class="form-calc-header">
+                                        <div class="form-calc-title">
+                                            <img src="~/assets/images/box.svg" alt="">
+                                            <h3>Kalkulyator</h3>
+                                        </div>
+                                        <div class="form-reset">
+                                            <button type="reset" class="btn btn-link">
+                                                <img src="~/assets/images/reset.svg" alt="">
+                                                <span>Kalkulyatoru sıfırla</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <select asp-for="Calculator.CountryId" class="custom-select">
+                                                @foreach (var country in Model.Countries)
+                                                {
+                                                    <option value="@country.Id">@country.Name</option>
+
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <select asp-for="Calculator.DeliveryTypeId" class="custom-select">
+                                                @foreach (var deliveryType in Model.DeliveryTypes)
+                                                {
+                                                    <option value="@deliveryType.Id">@deliveryType.Name</option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-btn-append">
+                                                <input asp-for="Calculator.Weight" type="number" step="0.01" min="0.01" placeholder="Çəki"
+                                                       class="form-control">
+                                                <div class="input-group-append">
+                                                    <div class="dropdown b-dropdown btn-group">
+                                                        <button type="button"
+                                                                class="btn dropdown-toggle btn-outline-primary dropdown-toggle-no-caret">
+                                                            kq
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-btn-append">
+                                                <input asp-for="Calculator.Width" type="number" step="0.01" min="0.01" placeholder="En" class="form-control">
+                                                <div class="input-group-append">
+                                                    <div class="dropdown b-dropdown btn-group">
+                                                        <button type="button"
+                                                                class="btn dropdown-toggle btn-outline-primary dropdown-toggle-no-caret">
+                                                            sm
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-btn-append">
+                                                <input asp-for="Calculator.Length" type="number" step="0.01" min="0.01" placeholder="Uzunluq" class="form-control">
+                                                <div class="input-group-append">
+                                                    <div class="dropdown b-dropdown btn-group">
+                                                        <button type="button"
+                                                                class="btn dropdown-toggle btn-outline-primary dropdown-toggle-no-caret">
+                                                            sm
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="input-group input-group-btn-append">
+                                                <input asp-for="Calculator.Height" type="number" step="0.01" min="0.01" placeholder="Hündürlük" class="form-control">
+                                                <div class="input-group-append">
+                                                    <div class="dropdown b-dropdown btn-group">
+                                                        <button type="button"
+                                                                class="btn dropdown-toggle btn-outline-primary dropdown-toggle-no-caret">
+                                                            sm
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <select asp-for="Calculator.ShipmentTypeId" class="custom-select last">
+                                                @foreach (var shipmentType in Model.ShipmentTypes)
+                                                {
+                                                    <option value="@shipmentType.Id">@shipmentType.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="total">
+                                                <div class="total-label">Cəmi:</div>
+                                                <div class="total-price">
+                                                    <span class="all_count">@(Model.TotalPrice.HasValue ? $"₼{Model.TotalPrice.Value:F2}" : "₼0.00")</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-12">
+                                            <button type="submit"
+                                                    class="btn form-calc-submit btn-submit btn-primary btn-block">
+                                                Hesabla
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-6 col-12">
+                                            <div class="form-info">
+                                                <img src="~/assets/images/info.svg" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-calc-info">
+                        <div class="card-body">
+                            <div class="card-text">
+                                <h5>Qeyd:</h5>
+                                <p>
+                                    Sifariş olunan bağlamanın çatdırılma haqqı çəkiyə görə hesablanır. Ölçüsü 1
+                                    metrdən
+                                    böyük olan bağlamaların çatdırılma haqqı isə həcmi çəkiyə görə müəyyən edilir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main End -->

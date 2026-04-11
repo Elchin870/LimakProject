@@ -1,0 +1,66 @@
+﻿@model ShopViewModel
+<!-- Main Start -->
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container">
+        <!-- Currency -->
+        <div class="shop">
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title">MAĞAZALAR</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Mağazalar</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="block-body">
+                    <div class="row">
+                        <div class="col-md-4 col-lg-3 col-12">
+                            <div class="card card card-sidebar">
+                                <ul class="nav flex-column">
+                                    <li class="nav-item" data-target-item="all">
+                                        <a href="#" class="nav-link active">Bütün kateqoriyalar</a>
+                                    </li>
+                                    @foreach (var category in Model.Shops.GroupBy(x => x.CategoryName))
+                                    {
+                                        <li class="nav-item" data-target-item="@category.Key">
+                                            <a href="#" class="nav-link">@category.Key</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-9 col-12">
+                            <div class="store-list">
+                                <div data-id="1" class="active active-tab tab-pane">
+                                    <div class="row">
+                                        @foreach (var shop in Model.Shops)
+                                        {
+                                            <div class="col-md-6 col-lg-4 col-6 item-box" data-item="@shop.CategoryName">
+                                                <a href=" @shop.WebsitePath"
+                                                   target="_blank" class="store-item">
+                                                    <article class="card">
+                                                        <img src="@shop.ImagePath"
+                                                             alt="@shop.Name" class="card-img"
+                                                             style="width: 70%;">
+                                                    </article>
+                                                </a>
+                                            </div>
+
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Main End -->

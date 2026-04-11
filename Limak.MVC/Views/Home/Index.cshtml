@@ -1,0 +1,319 @@
+﻿@model HomeViewModel
+<!-- Main Start -->
+<main>
+    <section id="hero" style="background-image: url(./assets/images/background-img.jpg);">
+        <div class="container-hero">
+            <div class="row">
+                <div class="col-md-7 col-12">
+                    <div class="card order-card">
+                        <div class="order-card-content">
+                            <h1 class="title order-card-title">
+                                "LİMAK"
+                                <span class="badge badge-secondary">SÜRƏTLİ</span>
+                                POÇTDAŞIMA <br> VƏ <br>
+                                KURYER ŞİRKƏTİDİR
+                            </h1>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <form asp-controller="UserPanel" asp-action="Create" method="get">
+                                    <div class="order-input">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Məhsul linkini əlavə edin">
+                                            <div class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <img src="~/assets/images/link.svg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-success btn-plus">
+                                            <img src="~/assets/images/plus.svg" alt="">
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success btn-order">Sifariş et</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Account" asp-action="Login" method="get">
+                                    <div class="order-input">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Məhsul linkini əlavə edin">
+                                            <div class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <img src="~/assets/images/link.svg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-success btn-plus">
+                                            <img src="~/assets/images/plus.svg" alt="">
+                                        </button>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success btn-order">Sifariş et</button>
+                                </form>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-12">
+                    <div class="card register-card">
+                        <div class="register-card-header">
+                            <h2 class="register-card-title">QEYDİYYAT</h2>
+                            <img src="~/assets/images/mascot.svg" alt="">
+                        </div>
+                        <div class="register-card-main">
+                            <div class="register-card-padding">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <form method="post" asp-controller="Account" asp-action="Register" class="register-card-form">
+                                    <div class="register-card-form-input">
+                                        <input asp-for="Register.FirstName" type="text" placeholder="Ad" class="form-control">
+                                        <input asp-for="Register.LastName" type="text" placeholder="Soyad" class="form-control">
+                                    </div>
+                                    <div class="register-card-form-input">
+                                        <input asp-for="Register.UserName" type="text" placeholder="Username" class="form-control">
+                                        <input asp-for="Register.Email" type="text" placeholder="Email" class="form-control">
+                                        <input asp-for="Register.PhoneNumber" type="tel" placeholder="Telefon" class="form-control">
+                                    </div>
+                                    <div class="register-card-form-input">
+                                        <div class="group mr">
+                                            <input asp-for="Register.Password" type="password" placeholder="Şifrə"
+                                                   class="form-control">
+                                            <a class="visibility-btn showPass">
+                                                <span class="show"></span>
+                                            </a>
+                                        </div>
+                                        <div class="group">
+                                            <input asp-for="Register.ConfirmPassword" type="password" placeholder="Şifrənin təkrarı"
+                                                   class="form-control last-input">
+                                            <a class="visibility-btn showPass">
+                                                <span class="show"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <select asp-for="Register.OfficeId" class="custom-select">
+                                        @foreach (var office in Model.Offices)
+                                        {
+                                            <option value="@office.Id">
+                                                @office.City
+                                                @if (!string.IsNullOrWhiteSpace(office.MetroStation))
+                                                {
+                                                    @: - @office.MetroStation
+                                                }
+                                            </option>
+                                        }
+
+                                    </select>
+                                    <button type="submit">
+                                        <span>QEYDİYYAT</span>
+                                        <img src="~/assets/images/arrow-right.svg" alt="">
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="home-banner">
+            <a href="#" class="left-banner">
+                <div style="position: relative;">
+                    <img src="~/assets/images/left-ban02.png" alt="">
+                </div>
+            </a>
+            <a href="#" class="right-banner">
+                <div style="position: relative;">
+                    <img src="~/assets/images/right-ban02.png" alt="">
+                </div>
+            </a>
+        </div>
+    </section>
+    <div class="main-container">
+        <div class="home">
+            <!-- Shops -->
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title">Mağazalar</h2>
+                </div>
+                <div class="block-body">
+                    <div class="store-list">
+                        <div class="row">
+                            @foreach (var shop in Model.Shops)
+                            {
+                                <div class="col-sm-4 col-md-3 col-6">
+                                    <a target="_blank" href="@shop.WebsitePath" class="store-item">
+                                        <article class="card">
+                                            <img src="@shop.ImagePath" alt="">
+                                        </article>
+                                    </a>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="block-foot">
+                    <a asp-controller="Shop" asp-action="Index" class="more">
+                        <span>Daha çox</span>
+                        <img src="~/assets/images/arrow-right-color.svg" alt="">
+                    </a>
+                </div>
+            </div>
+
+            <!-- News -->
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title">YENİLİKLƏR VƏ ELANLAR</h2>
+                </div>
+                <div class="block-body">
+                    <div class="news-list">
+                        <div class="row">
+                            @foreach (var announcement in Model.Announcements)
+                            {
+                                <div class="col-sm-6 col-md-4 col-12">
+                                    <a href="#" class="news-card">
+                                        <article class="card">
+                                            <img src="@announcement.ImagePath" alt="" class="card-img-top">
+                                            <div class="card-body">
+                                                <h4 class="card-title">@announcement.Title</h4>
+                                                <p class="card-text news-card-date">
+                                                    <img src="~/assets/images/calendar.svg" alt="">
+                                                    <span>@announcement.CreatedAt.ToString("yyyy-MM-d") @announcement.CreatedAt.ToString("HH:mm:ss")</span>
+                                                </p>
+                                            </div>
+                                        </article>
+                                    </a>
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="block-foot">
+                    <a href="#" class="more">
+                        <span>Daha çox</span>
+                        <img src="~/assets/images/arrow-right-color.svg" alt="">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Currency -->
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title">ÖLKƏLƏR ÜZRƏ TARİFLƏR</h2>
+                </div>
+
+                <div class="block-body">
+                    <div class="currency-inner" style="display:flex;gap:40px;flex-wrap:wrap;justify-content:center; max-width:1200px;margin:0 auto;">
+
+                        @foreach (var countryGroup in Model.Tariffs.GroupBy(x => x.CountryName))
+                        {
+                            <div class="tariff-card-modern">
+
+                                <div class="tariff-header-modern" style="display:flex; align-items:center; gap:10px;">
+
+                                    <img src="@(countryGroup.Key == "Türkiyə"
+                                                                                                                                                                            ? Url.Content("~/assets/images/tr-circle.svg")
+                                                                                                                                                                            : Url.Content("~/assets/images/usa-circle.svg"))"
+                                     alt="@countryGroup.Key"
+                                     style="width:32px; height:32px;" />
+
+                                    <h3 style="margin:0;">
+                                        @countryGroup.Key
+                                    </h3>
+
+                                </div>
+
+                                <div class="delivery-toggle">
+                                    <button class="delivery-btn active"
+                                            data-delivery="Filiala çatdırılma">
+                                        Filiala çatdırılma
+                                    </button>
+
+                                    <button class="delivery-btn"
+                                            data-delivery="Adresə çatdırılma">
+                                        Adresə çatdırılma
+                                    </button>
+                                </div>
+
+                            @foreach (var deliveryGroup in countryGroup.GroupBy(x => x.DeliveryTypeName))
+                                {
+                                    <div class="delivery-section"
+                                         data-section="@deliveryGroup.Key"
+                                         style="display:@(deliveryGroup.Key == "Filiala çatdırılma" ? "block" : "none")">
+
+                                        @foreach (var weightGroup in deliveryGroup
+                                                                        .GroupBy(x => new { x.MinWeight, x.MaxWeight })
+                                                                        .OrderBy(x => x.Key.MinWeight))
+                                        {
+                                            var standart = weightGroup
+                                            .FirstOrDefault(x => x.ShipmentTypeName == "Standart");
+
+                                            var maye = weightGroup
+                                            .FirstOrDefault(x => x.ShipmentTypeName == "Maye");
+
+                                            <div class="tariff-row-modern">
+
+                                                <div class="weight-col">
+                                                    @weightGroup.Key.MinWeight -
+                                                    @weightGroup.Key.MaxWeight kq
+
+                                                    @if (weightGroup.Key.MinWeight == 1
+                                                                                            && weightGroup.Key.MaxWeight == 5000)
+                                                    {
+                                                        <span class="per-kg-text">(Hər kq üçün)</span>
+                                                    }
+                                                </div>
+
+                                                <div class="price-col">
+                                                    <div class="price-box">
+                                                        <span>Standart</span>
+                                                        <strong>@(standart?.BasePrice ?? 0) ₼</strong>
+                                                    </div>
+
+                                                    <div class="price-box liquid">
+                                                        <span>Maye</span>
+                                                        <strong>@(maye?.BasePrice ?? 0) ₼</strong>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partners -->
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title">SERTİFİKATLARIMIZ VƏ TƏRƏFDAŞLARIMIZ</h2>
+                </div>
+                <div class="block-body">
+                    <div class="partner-list">
+                        @foreach (var partner in Model.Partners)
+                        {
+                            <a target="_blank" href="@partner.WebsitePath" class="partner-item">
+                                <img src="@partner.ImagePath" alt="">
+                            </a>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Main End -->

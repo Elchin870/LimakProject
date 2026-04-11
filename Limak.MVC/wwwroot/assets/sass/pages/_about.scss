@@ -1,0 +1,26 @@
+.card-body {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 45px 64px;
+  .float-right {
+    float: right !important;
+  }
+  .card-img {
+    width: auto;
+    margin-left: 30px;
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+    border-bottom-right-radius: calc(0.25rem - 1px);
+    border-bottom-left-radius: calc(0.25rem - 1px);
+  }
+  .card-text {
+    font-size: 13px;
+    line-height: 22px;
+    margin-top: 30px;
+    text-align: justify;
+
+    h5 {
+      font-size: 2rem;
+    }
+  }
+}

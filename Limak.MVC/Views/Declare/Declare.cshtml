@@ -1,0 +1,562 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Limak.MVC.ViewModels.DeclareViewModels
+@model DeclareViewModel
+
+@{
+    ViewData["Title"] = "Bağlama Bəyanı";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .declare-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .declare-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+            .declare-header h1 {
+                font-size: 38px;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
+
+            .declare-header p {
+                font-size: 18px;
+                opacity: 0.9;
+            }
+
+        .declare-content {
+            padding: 50px;
+        }
+
+        .form-group {
+            margin-bottom: 35px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 18px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 12px;
+            }
+
+            .form-group .required {
+                color: #e74c3c;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="number"],
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+                padding: 16px;
+                font-size: 16px;
+                border: 2px solid #ecf0f1;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+                font-family: inherit;
+            }
+
+                .form-group input[type="text"]:focus,
+                .form-group input[type="number"]:focus,
+                .form-group select:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 100px;
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .shipment-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 2px solid #ecf0f1;
+        }
+
+            .shipment-section h3 {
+                font-size: 22px;
+                font-weight: 600;
+                color: #2c3e50;
+                margin-bottom: 25px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .office-selection,
+        .kargomat-selection {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+            .office-selection.active,
+            .kargomat-selection.active {
+                display: block;
+            }
+
+        .address-input {
+            display: none;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+            .address-input.active {
+                display: block;
+            }
+
+        .option-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .option-item {
+            background: white;
+            padding: 18px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 16px;
+        }
+
+            .option-item:hover {
+                border-color: #667eea;
+                background: #f8f9ff;
+                transform: translateX(5px);
+            }
+
+            .option-item input[type="radio"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                accent-color: #667eea;
+                flex-shrink: 0;
+            }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+
+        .option-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .option-price {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 18px;
+            background: #f0f3ff;
+            padding: 8px 15px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 50px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+            max-width: 300px;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+            flex: 1;
+            max-width: 300px;
+        }
+
+            .btn-secondary:hover {
+                background: #bdc3c7;
+                transform: translateY(-2px);
+            }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 16px;
+            border: 1px solid #f5c6cb;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #1565c0;
+        }
+
+            .info-box strong {
+                font-weight: 600;
+            }
+
+        .form-control {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="declare-container">
+        <div class="declare-header">
+            <h1>📦 Bağlama Bəyanı</h1>
+        </div>
+
+        <div class="declare-content">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="error-message">
+                    <strong>Xəta!</strong> Zəhmət olmasa formu yoxlayın və yenidən cəhd edin.
+                </div>
+            }
+
+            <form method="post" asp-action="Declare">
+                <input type="hidden" name="PackageId" value="@ViewBag.PackageId" />
+
+                <div class="info-box">
+                    <strong>💡 Məlumat:</strong> Bütün boş yerlər məcburi doldurulmalıdır. Məlumatları dəqiq daxil edin.
+                </div>
+
+                <div class="form-group">
+                    <label for="CountryId">
+                        Ölkə <span class="required">*</span>
+                    </label>
+                    <select id="CountryId" name="CountryId" required class="form-control">
+                        <option value="">-- Ölkə seçin --</option>
+                        @foreach (var country in Model.Countries)
+                        {
+                            <option value="@country.Id">@country.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="Quantity">
+                            Miqdar (ədəd) <span class="required">*</span>
+                        </label>
+                        <input type="number" id="Quantity" name="Quantity" required min="1" placeholder="Məs: 2" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Price">
+                            Qiymət (AZN) <span class="required">*</span>
+                        </label>
+                        <input type="number" id="Price" name="Price" required min="0" step="0.01" placeholder="Məs: 99.99" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="shipment-section">
+                    <h3>
+                        <div class="section-icon">1</div>
+                        Çatdırılma Növü
+                    </h3>
+                    <div class="form-group">
+                        <label for="DeliveryTypeId">
+                            Çatdırılma növünü seçin <span class="required">*</span>
+                        </label>
+                        <select id="DeliveryTypeId" name="DeliveryTypeId" required class="form-control" onchange="handleDeliveryTypeChange(this)">
+                            <option value="">-- Çatdırılma növünü seçin --</option>
+                            @foreach (var deliveryType in Model.DeliveryTypes)
+                            {
+                                <option value="@deliveryType.Id">@deliveryType.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="shipment-section">
+                    <h3>
+                        <div class="section-icon">2</div>
+                        Göndərmə Növü
+                    </h3>
+                    <div class="form-group">
+                        <label>
+                            Göndərmə növünü seçin <span class="required">*</span>
+                        </label>
+                        <div class="option-list">
+                            @foreach (var shipmentType in Model.ShipmentTypes)
+                            {
+                                <label class="option-item">
+                                    <input type="radio" name="ShipmentTypeId" value="@shipmentType.Id" required onchange="handleShipmentTypeChange(this)" />
+                                    <div class="option-content">
+                                        <div class="option-title">@shipmentType.Name</div>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="office-selection" id="officeSelection">
+                        <label>
+                            Ofis seçin <span class="required">*</span>
+                        </label>
+                        <div class="option-list">
+                            @foreach (var office in Model.Offices)
+                            {
+                                <label class="option-item">
+                                    <input type="radio" name="OfficeId" value="@office.Id" onchange="handleOfficeChange()" />
+                                    <div class="option-content">
+                                        <div class="option-title">@office.City</div>
+                                        <div class="option-subtitle">Metro: @office.MetroStation</div>
+                                    </div>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="kargomat-selection" id="kargomatSelection">
+                        <label>
+                            Kargomatı seçin <span class="required">*</span>
+                        </label>
+                        <div class="option-list">
+                            @foreach (var kargomat in Model.Kargomats)
+                            {
+                                <label class="option-item">
+                                    <input type="radio" name="KargomatId" value="@kargomat.Id" onchange="handleKargomatChange()" />
+                                    <div class="option-content">
+                                        <div class="option-title">@kargomat.ShortAddress</div>
+                                        <div class="option-subtitle">@kargomat.FullAddress</div>
+                                    </div>
+                                    <div class="option-price">₼@kargomat.Price.ToString("F2")</div>
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="address-input" id="addressInput">
+                        <div class="form-group">
+                            <label for="Address">
+                                Çatdırılma Ünvanı <span class="required">*</span>
+                            </label>
+                            <textarea id="Address" name="Address" placeholder="Ən ətraflı şəkildə ünvanı yazın. Məs: Bakı şəhəri, Abşeron rayonu, Nərimanov seçməsi, Aziz Əliyev küçəsi, 123 nömrəli bina, 5-ci mərtəbə, 10 nömrəli mənzil" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <a asp-action="Index" class="btn btn-secondary">← Geri qayıt</a>
+                    <button type="submit" class="btn btn-primary" onclick="return validateForm();">✓ Bəyanı Təsdiqlə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function handleDeliveryTypeChange(selectElement) {
+            const deliveryTypeName = selectElement.options[selectElement.selectedIndex].text.toLowerCase().trim();
+
+            // Reset all selections
+            document.querySelectorAll('input[name="OfficeId"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[name="KargomatId"]').forEach(r => r.checked = false);
+            const addressField = document.getElementById('Address');
+            if (addressField) addressField.value = '';
+
+            // Hide all special sections initially
+            document.getElementById('officeSelection').classList.remove('active');
+            document.getElementById('kargomatSelection').classList.remove('active');
+            document.getElementById('addressInput').classList.remove('active');
+
+            // Remove required attributes
+            document.querySelectorAll('input[name="OfficeId"]').forEach(r => r.required = false);
+            document.querySelectorAll('input[name="KargomatId"]').forEach(r => r.required = false);
+            if (addressField) addressField.required = false;
+
+            console.log('Selected delivery type:', deliveryTypeName);
+
+            // Check if delivery type is "Adresə çatdırılma"
+            if (deliveryTypeName.includes('adres')) {
+                document.getElementById('addressInput').classList.add('active');
+                if (addressField) addressField.required = true;
+                console.log('Address input activated');
+            } else if (deliveryTypeName.includes('filiala')) {
+                // For "Filiala çatdırılma", show both office and kargomat options
+                document.getElementById('officeSelection').classList.add('active');
+                document.getElementById('kargomatSelection').classList.add('active');
+                console.log('Office and Kargomat selections activated');
+            }
+        }
+
+        // Show/hide office and kargomat sections based on shipment type (if needed for other logic)
+        function handleShipmentTypeChange(radioElement) {
+            const shipmentTypeId = radioElement.value;
+            const shipmentTypeName = radioElement.parentElement.querySelector('.option-title')?.textContent?.toLowerCase().trim() || '';
+
+            console.log('Selected shipment type:', shipmentTypeName);
+            // Shipment type logic can be added here if needed
+        }
+
+        function handleOfficeChange() {
+            // Clear kargomat selection only when office is selected
+            const officeChecked = document.querySelector('input[name="OfficeId"]:checked');
+            if (officeChecked) {
+                document.querySelectorAll('input[name="KargomatId"]').forEach(r => r.checked = false);
+            }
+        }
+
+        function handleKargomatChange() {
+            // Clear office selection only when kargomat is selected
+            const kargomatChecked = document.querySelector('input[name="KargomatId"]:checked');
+            if (kargomatChecked) {
+                document.querySelectorAll('input[name="OfficeId"]').forEach(r => r.checked = false);
+            }
+        }
+
+        // Validate form before submission
+        function validateForm() {
+            const deliveryTypeSelect = document.getElementById('DeliveryTypeId');
+            const deliveryTypeName = deliveryTypeSelect.options[deliveryTypeSelect.selectedIndex].text.toLowerCase().trim();
+
+            // Check if Adresə çatdırılma is selected
+            if (deliveryTypeName.includes('adres')) {
+                const addressField = document.getElementById('Address');
+                if (!addressField || addressField.value.trim() === '') {
+                    alert('Zəhmət olmasa çatdırılma ünvanını daxil edin.');
+                    addressField?.focus();
+                    return false;
+                }
+            }
+
+            // Check if Filiala çatdırılma is selected
+            if (deliveryTypeName.includes('filiala')) {
+                const officeSelected = document.querySelector('input[name="OfficeId"]:checked');
+                const kargomatSelected = document.querySelector('input[name="KargomatId"]:checked');
+
+                // At least ONE of them must be selected (not both required)
+                if (!officeSelected && !kargomatSelected) {
+                    alert('Zəhmət olmasa ofis və ya kargomatı seçin.');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const deliveryTypeSelect = document.getElementById('DeliveryTypeId');
+            if (deliveryTypeSelect && deliveryTypeSelect.value) {
+                handleDeliveryTypeChange(deliveryTypeSelect);
+            }
+
+            // Add form validation on submit
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!validateForm()) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

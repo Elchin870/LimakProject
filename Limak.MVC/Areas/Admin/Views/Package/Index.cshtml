@@ -1,0 +1,422 @@
+﻿@model AdminPackageViewModel
+
+@{
+    ViewData["Title"] = "Bağlama İdarəsi";
+}
+
+<!-- Success/Error Messages -->
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"]?.ToString()))
+{
+    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" style="z-index: 9999; margin-top: 20px;" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+{
+    <div class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x" style="z-index: 9999; margin-top: 20px;" role="alert">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-box-seam me-2"></i>Bağlama İdarəsi
+                </h1>
+                <div class="d-flex gap-3 align-items-center">
+                    <span class="badge bg-info fs-6">@(Model?.AdminPackageLists?.Count ?? 0) Bağlamalar</span>
+                    <a asp-area="Admin" asp-controller="Package" asp-action="Create" class="btn btn-success">
+                        <i class="bi bi-plus-lg me-2"></i>Bağlama Yaradın
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model?.AdminPackageLists == null || Model.AdminPackageLists.Count == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Heç bir bağlama tapılmadı.</strong> Sistəmdə hələ heç bir bağlama yoxdur.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 12%">Ölkə</th>
+                        <th style="width: 12%">Müştəri Məlumatı</th>
+                        <th style="width: 10%">Sifariş Nömrəsi</th>
+                        <th style="width: 10%">İzləmə Nömrəsi</th>
+                        <th style="width: 10%">Mağaza</th>
+                        <th style="width: 12%">Ünvan</th>
+                        <th style="width: 8%">Çəki (kg)</th>
+                        <th style="width: 10%">Göndərmə Qiyməti</th>
+                        <th style="width: 8%">Ödəniş</th>
+                        <th style="width: 8%">Status</th>
+                        <th style="width: 8%">Tarix</th>
+                        <th style="width: 12%">Əməliyyatlar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var package in Model.AdminPackageLists)
+                    {
+                        <tr>
+                            <!-- Country -->
+                            <td>
+                                <span class="badge bg-secondary">@package.CountryName</span>
+                            </td>
+
+                            <!-- Customer Info -->
+                            <td>
+                                <div class="fw-500">
+                                    @package.CustomerFirstName @package.CustomerLastName
+                                </div>
+                                <small class="text-muted">@package.CustomerCode</small>
+                            </td>
+
+                            <!-- Order Number -->
+                            <td>
+                                <code class="bg-light px-2 py-1 rounded">@package.OrderNumber</code>
+                            </td>
+
+                            <!-- Tracking Number -->
+                            <td>
+                                <code class="bg-light px-2 py-1 rounded">@package.TrackingNumber</code>
+                            </td>
+
+                            <!-- Store Name -->
+                            <td>
+                                <div class="text-truncate" title="@package.StoreName">
+                                    <strong>@package.StoreName</strong>
+                                </div>
+                            </td>
+
+                            <!-- Location -->
+                            <td>
+                                @{
+                                    string location = "";
+                                    if (!string.IsNullOrWhiteSpace(package.OfficeCity))
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(package.OfficeMetroStation))
+                                        {
+                                            location = $"Limak {package.OfficeCity}-{package.OfficeMetroStation}";
+                                        }
+                                        else
+                                        {
+                                            location = $"Limak {package.OfficeCity}";
+                                        }
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(package.Address))
+                                    {
+                                        location = package.Address;
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(package.KargomatAddress))
+                                    {
+                                        location = package.KargomatAddress;
+                                    }
+                                }
+                                <small class="text-muted text-truncate" title="@location">@location</small>
+                            </td>
+
+                            <!-- Weight -->
+                            <td>
+                                @if (package.Weight.HasValue)
+                                {
+                                    <span>@package.Weight.Value.ToString("F2")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+
+                            <!-- Shipping Price -->
+                            <td>
+                                @if (package.ShippingPrice.HasValue)
+                                {
+                                    <span class="fw-600">@package.ShippingPrice.Value.ToString("F2") AZN</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+
+                            <!-- Payment Status -->
+                            <td>
+                                @if (package.IsPaid)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle-fill"></i> Ödənilib
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">
+                                        <i class="bi bi-clock-history"></i> Ödənilməyib
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- Status -->
+                            <td>
+                                @{
+                                    var statusClass = package.Status switch
+                                    {
+                                        Limak.Domain.Enums.PackageStatus.InWarehouse => "primary",
+                                        Limak.Domain.Enums.PackageStatus.InTransit => "info",
+                                        Limak.Domain.Enums.PackageStatus.ArrivedToCountry => "warning",
+                                        Limak.Domain.Enums.PackageStatus.ReadyForDelivery => "success",
+                                        Limak.Domain.Enums.PackageStatus.Delivered => "success",
+                                        _ => "secondary"
+                                    };
+                                    var statusIcon = package.Status switch
+                                    {
+                                        Limak.Domain.Enums.PackageStatus.InWarehouse => "box-seam-fill",
+                                        Limak.Domain.Enums.PackageStatus.InTransit => "truck",
+                                        Limak.Domain.Enums.PackageStatus.ArrivedToCountry => "geo-alt-fill",
+                                        Limak.Domain.Enums.PackageStatus.ReadyForDelivery => "check-circle-fill",
+                                        Limak.Domain.Enums.PackageStatus.Delivered => "check-circle-fill",
+                                        _ => "circle"
+                                    };
+                                    var statusText = package.Status switch
+                                    {
+                                        Limak.Domain.Enums.PackageStatus.WaitingForDeclaration => "Bəyan Gözləmədə",
+                                        Limak.Domain.Enums.PackageStatus.Declared => "Bəyan Edilib",
+                                        Limak.Domain.Enums.PackageStatus.ReadyForWarehouse => "Anbar Üçün Hazır",
+                                        Limak.Domain.Enums.PackageStatus.InWarehouse => "Anbarda",
+                                        Limak.Domain.Enums.PackageStatus.InTransit => "Tranzitdə",
+                                        Limak.Domain.Enums.PackageStatus.ArrivedToCountry => "Ölkəyə Çatdı",
+                                        Limak.Domain.Enums.PackageStatus.ReadyForDelivery => "Çatdırılmağa Hazır",
+                                        Limak.Domain.Enums.PackageStatus.Delivered => "Çatdırılıb",
+                                        Limak.Domain.Enums.PackageStatus.NeedCorrection => "Düzəlişə Ehtiyac",
+                                        _ => package.Status.ToString()
+                                    };
+                                }
+                                <span class="badge bg-@statusClass">
+                                    <i class="bi bi-@statusIcon"></i> @statusText
+                                </span>
+                            </td>
+
+                            <!-- Date -->
+                            <td>
+                                <small class="text-muted">@package.CreatedAt.ToString("g")</small>
+                            </td>
+
+                            <!-- Actions -->
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#updateStatusModal@(package.Id.ToString().Replace("-", ""))">
+                                        <i class="bi bi-pencil"></i> Yeniləyin
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modals outside table -->
+        @foreach (var package in Model.AdminPackageLists)
+        {
+            <div class="modal fade" id="updateStatusModal@(package.Id.ToString().Replace("-", ""))" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title">
+                                <i class="bi bi-pencil-square me-2"></i>Bağlama Vəziyyətini Yeniləyin
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form asp-action="UpdateStatus" asp-controller="Package" asp-area="Admin" method="post">
+                            <div class="modal-body">
+                                <!-- Package Summary -->
+                                <div class="alert alert-light border mb-3">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">Müştəri</small>
+                                            <strong>@package.CustomerFirstName @package.CustomerLastName</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">Sifariş Nömrəsi</small>
+                                            <strong>@package.OrderNumber</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-muted d-block">İzləmə Nömrəsi</small>
+                                            <strong>@package.TrackingNumber</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden Package ID -->
+                                <input type="hidden" name="packageId" value="@package.Id" />
+
+                                <!-- Status Selection -->
+                                <div class="mb-3">
+                                    <label for="status@(package.Id.ToString().Replace("-", ""))" class="form-label">
+                                        <i class="bi bi-tag"></i> Bağlama Vəziyyəti
+                                    </label>
+                                    <select class="form-select" name="status" id="status@(package.Id.ToString().Replace("-", ""))" required>
+                                        <option value="">-- Vəziyyət Seçin --</option>
+                                        @{
+                                            var currentStatus = package.Status;
+                                            if (currentStatus == Limak.Domain.Enums.PackageStatus.WaitingForDeclaration)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.Declared)">Bəyan Edilib</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.Declared)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.ReadyForWarehouse)">Anbar Üçün Hazır</option>
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.NeedCorrection)">Düzəlişə Ehtiyac</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.NeedCorrection)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.Declared)">Bəyan Edilib</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.ReadyForWarehouse)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.InWarehouse)">Anbarda</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.InWarehouse)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.InTransit)">Tranzitdə</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.InTransit)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.ArrivedToCountry)">Ölkəyə Çatdı</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.ArrivedToCountry)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.ReadyForDelivery)">Çatdırılmağa Hazır</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.ReadyForDelivery)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.Delivered)">Çatdırılıb</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.Delivered)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.Delivered)" selected>Çatdırılıb</option>
+                                            }
+                                            else if (currentStatus == Limak.Domain.Enums.PackageStatus.Cancelled)
+                                            {
+                                                <option value="@((int)Limak.Domain.Enums.PackageStatus.Cancelled)" selected>Ləğv Edilib</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- Admin Note -->
+                                <div class="mb-3">
+                                    <label for="adminNote@(package.Id.ToString().Replace("-", ""))" class="form-label">
+                                        <i class="bi bi-chat-dots"></i> Admin Qeydi
+                                    </label>
+                                    <textarea class="form-control admin-note" name="adminNote" id="adminNote@(package.Id.ToString().Replace("-", ""))" rows="3"
+                                      placeholder="Qeyd əlavə edin (isteğe bağlı)" maxlength="500"></textarea>
+                                    <small class="text-muted d-block mt-1">
+                                        <span class="char-count">0</span>/500 simvol
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ləğv Et</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg"></i> Bağlamı Yeniləyin
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+    .fw-500 {
+        font-weight: 500;
+    }
+
+    .fw-600 {
+        font-weight: 600;
+    }
+
+    .btn-group-sm .btn {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.7rem;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-footer {
+        border-top: 1px solid #dee2e6;
+    }
+
+    .badge {
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .card-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .card {
+        border: 1px solid #dee2e6;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Character counter for admin note
+        document.querySelectorAll('.admin-note').forEach(textarea => {
+            textarea.addEventListener('input', function () {
+                const charCount = this.parentElement.querySelector('.char-count');
+                if (charCount) {
+                    charCount.textContent = this.value.length;
+                }
+            });
+        });
+    });
+</script>

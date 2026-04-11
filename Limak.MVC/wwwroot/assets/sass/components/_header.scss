@@ -1,0 +1,225 @@
+header {
+  background-color: $color-white;
+  box-shadow: 0px 12px 20px rgba($color: $color-grey-80, $alpha: 0.2);
+
+  &.fixed-top {
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+  }
+  .navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 106rem;
+    display: flex;
+    justify-content: center;
+    .container-nav {
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+
+      .navbar-wrapper {
+        display: flex;
+        align-items: center;
+        height: 6.5rem;
+        width: 100%;
+        z-index: 1;
+        .navbar-logo {
+          .logo {
+            margin-right: 2rem;
+          }
+        }
+        .nav-list {
+          @include flexbox;
+
+          .nav-list-item {
+            a {
+              color: $color-grey-80;
+              font-size: 1.5rem;
+              font-weight: 500;
+              margin: 0 1.2rem 0 1.2rem;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+
+        .navbar-right-col {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          flex: 1;
+          padding-left: 2.5rem;
+
+          .flag {
+            @include flexbox;
+            margin-right: 3rem;
+            p {
+              font-size: 1.5rem;
+              color: $color-white;
+              font-weight: 500;
+              margin-left: 1rem;
+            }
+          }
+          .navbar-contact-phone {
+            margin-left: 1rem;
+          }
+          .button {
+            margin-left: 3rem;
+            box-shadow: 0px 5px 5px rgba($color: $color-grey-80, $alpha: 0.2);
+          }
+          .user-panel-account {
+            width: 30%;
+            height: 34px;
+            display: flex;
+            justify-content: center;
+            background-color: #fef0ed;
+            border-radius: 2rem;
+            margin-left: 2rem;
+
+            .container-user-panel {
+              display: flex;
+              align-items: center;
+              justify-content: flex-end;
+              width: 100%;
+              max-width: 111rem;
+
+              .btn-group {
+                position: relative;
+                display: inline-flex;
+                vertical-align: middle;
+
+                .btn-primary {
+                  background-color: transparent !important;
+                  border: none !important;
+                  font-weight: 600;
+                  font-size: 14px;
+                  line-height: 17px;
+                  color: #373736 !important;
+                  padding: 0;
+                  padding-right: 20px;
+                  margin-right: 6px;
+                  display: flex;
+                  align-items: center;
+                  font-weight: 500;
+                  font-size: 13px;
+                  line-height: 16px;
+                  color: #818181 !important;
+                  padding-right: 40px;
+                  margin-right: 0;
+                  box-shadow: none !important;
+                }
+                .dropdown-toggle {
+                  &::after {
+                    display: inline-block;
+                    margin-left: 0.255em;
+                    vertical-align: 0.255em;
+                    content: "";
+                    position: absolute;
+                    right: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border: none;
+                    background-repeat: no-repeat;
+                    margin-left: 0;
+                    width: 12px;
+                    height: 8px;
+                    background-image: url(../../assets/images/caret-down-gray-mini.svg);
+                  }
+                }
+
+                ul {
+                  position: absolute;
+                  transform: translate3d(-77px, 16px, 0px);
+                  top: 0px;
+                  left: 0px;
+                  will-change: transform;
+                }
+                .dropdown-menu {
+                  position: absolute;
+                  top: 100%;
+                  left: 0;
+                  z-index: 1000;
+                  display: none;
+                  float: left;
+                  min-width: 10rem;
+                  padding: 0.5rem 0;
+                  margin: 0.125rem 0 0;
+                  font-size: 1rem;
+                  color: #212529;
+                  text-align: left;
+                  list-style: none;
+                  background-color: #fff;
+                  background-clip: padding-box;
+                  border: 1px solid rgba(0, 0, 0, 0.15);
+                  border-radius: 0.25rem;
+                  border: none;
+                  left: 0 !important;
+                  top: 10px !important;
+                  min-width: unset;
+                  padding: 4px 0;
+                  border-radius: 8px;
+                  width: 19rem;
+
+                  .lang-dropdown {
+                    .dropdown-item {
+                      display: block;
+                      width: 100%;
+                      padding: 0.4rem 2.4rem;
+                      clear: both;
+                      font-weight: 400;
+                      color: #212529;
+                      text-align: inherit;
+                      white-space: nowrap;
+                      background-color: transparent;
+                      border: 0;
+                      padding: 8px 14px;
+                      display: flex;
+                      align-items: center;
+                      span {
+                        font-weight: 500;
+                        font-size: 15px;
+                        line-height: 13px;
+                        color: #918f8f;
+                        margin-left: 12px;
+                        margin-left: 0;
+                      }
+
+                      &:hover {
+                        color: #16181b;
+                        text-decoration: none;
+                        background-color: #e9ecef;
+                      }
+                    }
+                  }
+
+                  &.active {
+                    display: block;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 6.5rem;
+      width: 44.5%;
+      border-bottom-left-radius: 50px;
+      background: linear-gradient(180deg, #fc7b5d 0%, #f05835 100%);
+    }
+  }
+}

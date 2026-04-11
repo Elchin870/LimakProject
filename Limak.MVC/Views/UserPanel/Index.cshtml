@@ -1,0 +1,274 @@
+﻿@model UserPanelViewModel
+@using Limak.Domain.Enums
+
+<!-- Main Start -->
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+    <div class="main-container" style="max-width: 114rem;">
+        <section id="user-panel">
+            <div class="block">
+                <div class="block-header">
+                    <h2 class="block-title" style="font-size: 20px; text-transform: uppercase; font-weight: bold;">
+                        İstifadəçi Paneli - Sifarişlərim
+                    </h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Ana səhifə</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>İstifadəçi Paneli</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Aside -->
+                <div class="col-md-4 col-lg-3 col-12">
+                    @await Component.InvokeAsync("UserAside")
+                </div>
+                <!-- Content -->
+                <div class="col-sm-12 col-md-8 col-lg-9">
+                    <div>
+                        <div class="content">
+                            <!-- Filter Section -->
+                            <div class="card mb-4" style="padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h5 style="font-size: 16px; font-weight: bold; margin-bottom: 20px; color: #333;">Filtr</h5>
+
+                                <form method="get" action="@Url.Action("Index", "UserPanel")" class="row g-3">
+                                    <!-- Country Filter -->
+                                    <div class="col-md-6">
+                                        <label for="countryFilter" style="font-size: 15px; font-weight: 500; margin-bottom: 10px; display: block; color: #555;">Ölkə Seçin</label>
+                                        <select id="countryFilter" name="countryId" class="form-control" style="font-size: 15px; padding: 10px; border: 1.5px solid #ddd; border-radius: 6px;">
+                                            <option value="">Hamısı</option>
+                                            @foreach (var country in Model.Countries)
+                                            {
+                                                <option value="@country.Id" selected="@(Model.SelectedCountryId == country.Id)">
+                                                    @country.Name
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <!-- Status Filter -->
+                                    <div class="col-md-6">
+                                        <label for="statusFilter" style="font-size: 15px; font-weight: 500; margin-bottom: 10px; display: block; color: #555;">Sifariş Statusu</label>
+                                        <select id="statusFilter" name="status" class="form-control" style="font-size: 15px; padding: 10px; border: 1.5px solid #ddd; border-radius: 6px;">
+                                            <option value="">Hamısı</option>
+                                            <option value="0" selected="@(Model.SelectedStatus == OrderStatus.Pending)">Gözləmədə</option>
+                                            <option value="1" selected="@(Model.SelectedStatus == OrderStatus.Approved)">Icrada</option>
+                                            <option value="2" selected="@(Model.SelectedStatus == OrderStatus.Cancelled)">Ləğv Edildi</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary" style="font-size: 15px; padding: 10px 25px; font-weight: 600; border-radius: 6px; background-color: #007bff; border: none; color: white; cursor: pointer;">
+                                            <i class="fas fa-search"></i> Axtar
+                                        </button>
+                                        <a href="@Url.Action("Index", "UserPanel")" class="btn btn-outline-secondary" style="font-size: 15px; padding: 10px 25px; font-weight: 600; border-radius: 6px; border: 1.5px solid #6c757d; color: #6c757d; margin-left: 10px; cursor: pointer; text-decoration: none;">
+                                            <i class="fas fa-redo"></i> Sıfırla
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Orders Info -->
+                            <div style="margin-bottom: 20px;">
+                                <p style="font-size: 16px; color: #666; font-weight: 500;">
+                                    <strong>Cəmi Sifarişlər:</strong> @Model.TotalOrders |
+                                    <strong style="margin-left: 15px;">Səhifə:</strong> @Model.CurrentPage / @Model.TotalPages
+                                </p>
+                            </div>
+
+                            <!-- Orders List -->
+                            @if (Model.UserOrders.Any())
+                            {
+                                <div class="orders-container" style="display: grid; gap: 20px;">
+                                    @foreach (var order in Model.UserOrders)
+                                    {
+                                        var statusClass = order.Status == OrderStatus.Pending ? "badge-warning" :
+                                        order.Status == OrderStatus.Approved ? "badge-success" :
+                                        "badge-danger";
+                                        var statusText = order.Status == OrderStatus.Pending ? "Gözləmədə" :
+                                        order.Status == OrderStatus.Approved ? "Icrada" :
+                                        "Ləğv Edildi";
+
+                                        <div class="card order-item" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s;">
+                                            <div style="padding: 20px; background: linear-gradient(135deg, #f5f5f5 0%, #f9f9f9 100%);">
+                                                <!-- Order Header -->
+                                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                                                    <div style="flex: 1;">
+                                                        <h4 style="font-size: 18px; font-weight: bold; color: #333; margin: 0 0 8px 0;">
+                                                            <a href="@order.StoreUrl" target="_blank" style="color: #007bff; text-decoration: none; cursor: pointer;">
+                                                                @order.StoreName
+                                                            </a>
+                                                        </h4>
+                                                        <p style="font-size: 14px; color: #666; margin: 0; text-decoration: none;">
+                                                            🌍 <strong>Ölkə:</strong> @order.CountryName
+                                                        </p>
+                                                    </div>
+                                                    <span class="badge @statusClass" style="font-size: 14px; padding: 8px 15px; border-radius: 20px; font-weight: 600;">
+                                                        @statusText
+                                                    </span>
+                                                </div>
+
+                                                <!-- Order Details Grid -->
+                                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 15px 0; border-top: 1.5px solid #e0e0e0; border-bottom: 1.5px solid #e0e0e0; padding: 15px 0;">
+                                                    <div>
+                                                        <p style="font-size: 13px; color: #888; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Miqdar</p>
+                                                        <p style="font-size: 18px; font-weight: bold; color: #333; margin: 5px 0 0 0;">@order.Quantity ədəd</p>
+                                                    </div>
+                                                    <div>
+                                                        <p style="font-size: 13px; color: #888; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Qiymət</p>
+                                                        <p style="font-size: 18px; font-weight: bold; color: #28a745; margin: 5px 0 0 0;">@order.PriceAzn.ToString("F2") AZN</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Order Footer -->
+                                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                                    <div>
+                                                        <p style="font-size: 13px; color: #888; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Tarix</p>
+                                                        <p style="font-size: 15px; color: #333; font-weight: 500; margin: 5px 0 0 0;">
+                                                            📅 @order.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p style="font-size: 13px; color: #888; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Sifariş№</p>
+                                                        <p style="font-size: 13px; color: #007bff; font-family: monospace; font-weight: 600; margin: 5px 0 0 0;">
+                                                            @order.OrderNumber
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Admin Note -->
+                                                @if (!string.IsNullOrEmpty(order.AdminNote))
+                                                {
+                                                    <div style="margin-top: 15px; padding: 12px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                                                        <p style="font-size: 14px; color: #856404; margin: 0; font-weight: 500;">
+                                                            <i class="fas fa-sticky-note"></i> <strong>Admin Qeydi:</strong> @order.AdminNote
+                                                        </p>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <!-- Pagination -->
+                                @if (Model.TotalPages > 1)
+                                {
+                                    <nav style="margin-top: 40px; display: flex; justify-content: center;">
+                                        <ul class="pagination" style="gap: 8px;">
+                                            @if (Model.CurrentPage > 1)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "UserPanel", new { countryId = Model.SelectedCountryId, status = Model.SelectedStatus, pageNumber = Model.CurrentPage - 1 })"
+                                                       style="font-size: 15px; padding: 10px 15px; border-radius: 6px; color: #007bff; border: 1px solid #dee2e6; text-decoration: none; background-color: white;">
+                                                        <i class="fas fa-chevron-left"></i> Əvvəlki
+                                                    </a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.TotalPages; i++)
+                                            {
+                                                if (i == Model.CurrentPage)
+                                                {
+                                                    <li class="page-item active">
+                                                        <span class="page-link" style="font-size: 15px; padding: 10px 15px; border-radius: 6px; background-color: #007bff; border: 1px solid #007bff; font-weight: 600;">@i</span>
+                                                    </li>
+                                                }
+                                                else if (i >= Model.CurrentPage - 2 && i <= Model.CurrentPage + 2)
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="@Url.Action("Index", "UserPanel", new { countryId = Model.SelectedCountryId, status = Model.SelectedStatus, pageNumber = i })"
+                                                           style="font-size: 15px; padding: 10px 15px; border-radius: 6px; color: #007bff; border: 1px solid #dee2e6; text-decoration: none; background-color: white; cursor: pointer;">
+                                                            @i
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.CurrentPage < Model.TotalPages)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link" href="@Url.Action("Index", "UserPanel", new { countryId = Model.SelectedCountryId, status = Model.SelectedStatus, pageNumber = Model.CurrentPage + 1 })"
+                                                       style="font-size: 15px; padding: 10px 15px; border-radius: 6px; color: #007bff; border: 1px solid #dee2e6; text-decoration: none; background-color: white;">
+                                                        Sonrakı <i class="fas fa-chevron-right"></i>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </nav>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" style="font-size: 16px; padding: 20px; border-radius: 8px; background-color: #e7f3ff; border: 1.5px solid #0066cc; color: #0066cc; text-align: center; font-weight: 500;">
+                                    <i class="fas fa-inbox"></i> Seçilən filtrlərə uyğun sifariş tapılmadı.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<!-- Main End -->
+
+<style>
+    .order-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .form-control, .page-link {
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .page-link:hover:not(.active) {
+            background-color: #f5f5f5;
+            color: #0056b3;
+        }
+
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white !important;
+        transform: translateY(-2px);
+    }
+
+    .card {
+        border: none;
+    }
+</style>

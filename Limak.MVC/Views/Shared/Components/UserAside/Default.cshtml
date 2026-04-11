@@ -1,0 +1,104 @@
+﻿@model UserAsideVM
+
+@if (Model != null)
+{
+    <aside class="aside">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-group user-nav ">
+                    <div class="list-group-item mt-0">
+                        <i class="far fa-user"></i>
+                        <h3 class="user-nav-title upper">
+                            @Model.FirstName @Model.LastName
+                        </h3>
+                    </div>
+                    <div class="list-group-item">
+                        <i class="far fa-user-circle"></i>
+                        <h3 class="user-nav-title">
+                            <span>Müştəri̇ kodu</span>
+                            <strong>@Model.CustomerCode</strong>
+                        </h3>
+                    </div>
+                    <div class="list-group-item user-nav-notf">
+                        <a asp-controller="Notification" asp-action="Index">
+                            <i class="fas fa-bell"></i>
+                            <h3 class="user-nav-title">
+                                Bildirişlər
+                            </h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="user-nav-group">
+                            <h4 class="user-nav-group-title">
+                                Cari ay
+                            </h4>
+                            <div class="user-nav-group-label">
+                                @Model.Money
+                                <span class="manat">₼</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="list-group aside-nav-top">
+                    <div class="list-group-item aside-nav mt-0">
+                        <a asp-controller="UserPanel" asp-action="Index">
+                            <i class="fas fa-shopping-bag"></i>
+                            <h3 class="aside-nav-title">Sifarişlər</h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item aside-nav">
+                        <a asp-controller="Declare" asp-action="Index">
+                            <i class="far fa-file-alt"></i>
+                            <h3 class="aside-nav-title">Bəyan Gözləyən</h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item aside-nav">
+                        <a asp-controller="Package" asp-action="Index">
+                            <i class="fas fa-box-open"></i>
+                            <h3 class="aside-nav-title">Bağlamalar</h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item aside-nav">
+                        <a asp-controller="Address" asp-action="Index">
+                            <i class="fas fa-thumbtack"></i>
+                            <h3 class="aside-nav-title">Xaricdəki ünvanlar</h3>
+                        </a>
+                    </div>
+                </div>
+                <div class="list-group aside-account">
+                    <div class="list-group-item mt-0 aside-nav">
+                        <a asp-controller="Balance" asp-action="Index">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h3 class="aside-account-title">
+                                Balansınız
+                            </h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item aside-nav">
+                        <a asp-controller="Settings" asp-action="Index">
+                            <i class="fas fa-user-cog"></i>
+                            <h3 class="aside-account-title">
+                                Tənzimləmələr
+                            </h3>
+                        </a>
+                    </div>
+                    <div class="list-group-item aside-nav">
+                        <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post">
+                        </form>
+
+                        <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">
+                            <i class="fas fa-power-off"></i>
+                            <h3 class="aside-account-title">
+                                Hesabdan çıx
+                            </h3>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+}

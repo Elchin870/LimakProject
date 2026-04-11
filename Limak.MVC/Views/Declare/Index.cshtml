@@ -1,0 +1,168 @@
+﻿@model DeclareViewModel
+
+<main id="main"
+      style="background: url(./assets/images/limak_bg.jpg) no-repeat; background-size: 100%; background-position: top center;"
+      class="bg-full">
+
+    <div class="main-container" style="max-width: 114rem;">
+
+        <section id="user-panel">
+
+            <div class="block">
+                <div class="block-header">
+
+                    <h2 class="block-title" style="font-size:17px;text-transform:uppercase;">
+                        Bəyanlar
+                    </h2>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Aside -->
+                <div class="col-md-4 col-lg-3 col-12">
+                    @await Component.InvokeAsync("UserAside")
+                </div>
+
+                <!-- Content -->
+                <div class="col-sm-12 col-md-8 col-lg-9">
+
+                    <div class="content">
+
+
+                        <div class="order-item order-item-package active active-tab">
+
+                            @if (Model.UserPackages.Any())
+                            {
+
+                                <div class="card mb20">
+
+                                    <div class="table-responsive">
+
+                                        <table class="table order-table package-table">
+
+                                            <thead class="align-center mobile-none">
+
+                                                <tr>
+                                                    <th>Sifariş№</th>
+                                                    <th>Mağaza</th>
+                                                    <th>Sifariş Məbləğ</th>
+                                                    <th>Tarix</th>
+                                                    <th>Əməliyyat</th>
+                                                </tr>
+
+                                            </thead>
+
+                                            <tbody>
+
+                                                @foreach (var item in Model.UserPackages)
+                                                {
+
+                                                    <tr>
+
+                                                        <td>
+                                                            <div class="d-flex v-center">
+                                                                <span>@item.OrderNumber</span>
+                                                            </div>
+                                                        </td>
+
+                                                        <td>
+                                                            <span class="d-flex v-center">
+                                                                @item.StoreName
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <span class="d-flex v-center">
+                                                                @item.OrderPrice AZN
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <span class="d-flex v-center">
+                                                                @item.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+
+                                                            <div class="d-flex flex-end">
+
+                                                                <a asp-controller="Declare"
+                                                                   asp-action="Declare"
+                                                                   asp-route-id="@item.Id"
+                                                                   class="btn btn-action btn-orange btn-secondary">
+
+                                                                    <span>Bəyan et</span>
+
+                                                                </a>
+
+                                                            </div>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                    @if (!string.IsNullOrWhiteSpace(item.AdminNote))
+                                                    {
+
+                                                        <tr class="package-details">
+
+                                                            <td colspan="5">
+
+                                                                <div style="padding:10px 20px">
+
+                                                                    <strong>Admin qeyd:</strong>
+                                                                    <span>@item.AdminNote</span>
+
+                                                                </div>
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+                            }
+                            else
+                            {
+
+                                <div class="card order-item">
+
+                                    <div class="order-item-title">
+
+                                        <h6 style="font-size:16px;font-weight:600;">
+                                            Anbarda bəyan gözləyən bağlamanız yoxdur.
+                                        </h6>
+
+                                    </div>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>

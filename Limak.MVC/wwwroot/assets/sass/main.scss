@@ -1,0 +1,47 @@
+// Bootstrap
+@import "../vendors/bootstrap-5.1.3/scss/bootstrap-grid.scss";
+@import "../vendors/bootstrap-5.1.3/scss/bootstrap-utilities.scss";
+// Bootstrap Components
+@import "../vendors/bootstrap-5.1.3/scss/accordion";
+@import "../vendors/bootstrap-5.1.3/scss/buttons";
+@import "../vendors/bootstrap-5.1.3/scss/list-group";
+@import "../vendors/bootstrap-5.1.3/scss/modal";
+
+// Variables
+@import "./variables/colors";
+@import "./variables/spacing";
+
+// Mixins
+@import "./mixins/flexbox";
+
+// Typoghrapy
+@import "./typography";
+@import "./reset";
+
+// Components
+@import "./components/header";
+@import "./components/footer";
+@import "./components/button";
+@import "./components/card";
+
+// Pages
+@import "./pages/index";
+@import "./pages/calculator";
+@import "./components/banner";
+@import "./pages/tariffs";
+@import "./pages/privacy";
+@import "./pages/contact";
+@import "./pages/terms";
+@import "./pages/about";
+@import "./pages/question";
+@import "./pages/user-panel";
+@import "./pages/report";
+@import "./pages/package";
+@import "./pages/address";
+@import "./pages/notifications";
+@import "./pages/up-setting";
+@import "./pages/courier";
+@import "./pages/balance";
+@import "./pages/register";
+@import "./pages/login";
+@import "./pages/shop";

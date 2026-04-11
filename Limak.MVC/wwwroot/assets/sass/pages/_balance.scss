@@ -1,0 +1,218 @@
+#user-panel {
+  .row {
+    .content {
+      .card {
+        .card-body {
+          padding: 40px 45px !important;
+          .balance-payment-title {
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 22px;
+            margin-bottom: 30px;
+            color: #373736;
+          }
+          .row {
+            .balance-payment-form {
+              form {
+                .row {
+                  .form-control {
+                    display: block;
+                    width: 100%;
+                    font-weight: 400;
+                    transition: border-color 0.15s ease-in-out,
+                      box-shadow 0.15s ease-in-out;
+                    background: #f5f5f7;
+                    border: 1px solid #dfdfdf;
+                    border-radius: 8px !important;
+                    height: 40px;
+                    font-size: 15px;
+                    line-height: 17px;
+                    padding: 10px 15px;
+                    color: #818181;
+                    margin-bottom: 20px;
+                  }
+                }
+                .btn {
+                  text-align: center;
+                  vertical-align: middle;
+                  user-select: none;
+                  transition: color 0.15s ease-in-out,
+                    background-color 0.15s ease-in-out,
+                    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                  color: #fff;
+                }
+                .btn-block {
+                  display: block;
+                  width: 100%;
+                }
+                .btn-submit {
+                  background: linear-gradient(180deg, #fc7b5d 0%, #f05835 100%);
+                  border: none;
+                  border-radius: 8px;
+                  font-weight: 600;
+                  font-size: 15px;
+                  line-height: 18px;
+                  padding: 11px 38px;
+                }
+              }
+            }
+
+            .balance-payment {
+              text-align: center;
+              padding-left: 70px;
+              .balance-payment-card {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+              }
+              .balance-payment-text {
+                font-size: 14px;
+                line-height: 17px;
+                color: #b9bdc1;
+                margin-top: 20px;
+              }
+            }
+          }
+        }
+      }
+      .balance-list {
+        .card {
+          .card-body {
+            padding: 2rem !important;
+            .balance-filter {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              margin-bottom: 10px;
+              padding-top: 5px;
+              padding-bottom: 20px;
+              border-bottom: 1px solid rgba(213, 213, 213, 0.5);
+              .btn-sm {
+                padding: 0.4rem 0.8rem;
+                font-size: 1.3rem;
+                line-height: 1.5;
+                border-radius: 0.3rem;
+                margin-right: 20px;
+                text-align: center !important;
+
+                img {
+                  width: auto;
+                  max-width: 100%;
+                }
+              }
+              .custom-select {
+                display: inline-block;
+                color: #495057;
+                vertical-align: middle;
+                transition: background-color 0.15s ease-in-out,
+                  border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                background-color: #f5f5f7;
+                background-image: url(../../assets/images/caret-down.svg);
+                background-repeat: no-repeat;
+                background-position-x: calc(100% - 15px);
+                background-position-y: center;
+                border: 1px solid #dfdfdf;
+                border-radius: 8px;
+                padding: 10px 15px;
+                height: 40px;
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 17px;
+                margin-bottom: 20px;
+                -moz-appearance: none;
+                -webkit-appearance: none;
+                min-width: 190px;
+                width: auto;
+                margin-bottom: 0;
+                outline: none;
+              }
+            }
+          }
+        }
+      }
+
+      .balance-orange {
+        .order-item-balance {
+          background: linear-gradient(180deg, #fc7b5d 0%, #f05835 100%);
+
+          .card-body {
+            .row {
+              .balance-card {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 30px 25px 25px;
+                border: 1px solid #ffb19e;
+                border-radius: 8px;
+                min-height: 208px;
+                color: #fff;
+
+                .balance-card-header {
+                  display: flex;
+                  align-items: flex-start;
+                  justify-content: space-between;
+                  flex-wrap: wrap;
+                  .balance-card-total {
+                    .balance-card-title {
+                      font-weight: 600;
+                      font-size: 16px;
+                      line-height: 20px;
+                    }
+
+                    .balance-card-total-price {
+                      font-weight: bold;
+                      font-size: 24px;
+                      line-height: 29px;
+                      margin-top: 6px;
+                    }
+
+                    sup {
+                      font-size: 18px;
+                      margin-left: 4px;
+                    }
+                  }
+
+                  .balance-card-date {
+                    text-align: right;
+
+                    p {
+                      font-weight: 500;
+                      font-size: 12.5px;
+                      line-height: 15px;
+                      margin-bottom: 4px;
+                    }
+
+                    strong {
+                      font-weight: 500;
+                      font-size: 12.5px;
+                      line-height: 15px;
+                    }
+                  }
+                }
+                .balance-card-body {
+                  .balance-card-text {
+                    font-weight: 500;
+                    font-size: 11px;
+                    line-height: 16px;
+                    margin-bottom: 12px;
+                  }
+                  .balance-card-note {
+                    font-weight: 600;
+                    font-size: 12.5px;
+                    line-height: 15px;
+
+                    &.upper {
+                      text-transform: uppercase;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

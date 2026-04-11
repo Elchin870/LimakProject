@@ -1,0 +1,335 @@
+﻿@model List<CountryGetDto>
+
+<style>
+    .page-container {
+        padding: 30px 20px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .page-title i {
+        color: #1abc9c;
+        font-size: 32px;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+        color: white;
+        padding: 12px 28px;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+        color: white;
+    }
+
+    .card-table {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .card-table:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    .table thead {
+        background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+        color: white;
+    }
+
+    .table thead th {
+        padding: 18px;
+        border: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: white;
+        vertical-align: middle;
+    }
+
+    .table tbody td {
+        padding: 16px 18px;
+        border: 1px solid #f0f1f5;
+        vertical-align: middle;
+        color: #555;
+        font-size: 14px;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f0fdf9;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .country-id {
+        font-weight: 600;
+        color: #1abc9c;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+    }
+
+    .country-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 15px;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1.5px solid transparent;
+    }
+
+    .btn-update {
+        background: #fff3cd;
+        color: #856404;
+        border-color: #ffeaa7;
+    }
+
+    .btn-update:hover {
+        background: #ffe69c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        color: #856404;
+    }
+
+    .btn-delete {
+        background: #f8d7da;
+        color: #721c24;
+        border-color: #f5c6cb;
+    }
+
+    .btn-delete:hover {
+        background: #f5c2c7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        color: #721c24;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+    }
+
+    .empty-state-icon {
+        font-size: 64px;
+        color: #bdc3c7;
+        margin-bottom: 20px;
+    }
+
+    .empty-state-text {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #555;
+    }
+
+    .empty-state-description {
+        font-size: 13px;
+        color: #95a5a6;
+        margin-bottom: 30px;
+    }
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1abc9c;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-size: 13px;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .table thead th,
+        .table tbody td {
+            padding: 12px;
+            font-size: 12px;
+        }
+
+        .action-group {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-container {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+    }
+</style>
+
+<div class="page-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="mdi mdi-earth"></i>
+            Ölkə İdarəsi
+        </h1>
+        <a asp-area="Admin" asp-controller="Country" asp-action="Create" class="btn-create">
+            <i class="mdi mdi-plus"></i>
+            Yeni Ölkə Əlavə Et
+        </a>
+    </div>
+
+    <!-- Statistics -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">@Model.Count()</div>
+                <div class="stat-label">Ümumi Ölkələr</div>
+            </div>
+        </div>
+    }
+
+    <!-- Table Card -->
+    <div class="card-table">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ölkə İD</th>
+                            <th>Ölkənin Adı</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="country-id">@item.Id.ToString().Substring(0, 8)...</span>
+                                </td>
+                                <td>
+                                    <span class="country-name">@item.Name</span>
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        <a asp-area="Admin" asp-controller="Country" asp-action="Update" asp-route-id="@item.Id" class="btn-action btn-update">
+                                            <i class="mdi mdi-pencil"></i>
+                                            Redaktə Et
+                                        </a>
+                                        <a asp-area="Admin" asp-controller="Country" asp-action="Delete" asp-route-id="@item.Id" class="btn-action btn-delete" onclick="return confirm('Bu ölkəni silmək istəyirsiniz?');">
+                                            <i class="mdi mdi-delete"></i>
+                                            Sil
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="mdi mdi-earth-off"></i>
+                </div>
+                <div class="empty-state-text">Heç bir ölkə tapılmadı</div>
+                <div class="empty-state-description">İlk ölkənizi yaratmaqla başlayın</div>
+                <a asp-area="Admin" asp-controller="Country" asp-action="Create" class="btn-create">
+                    <i class="mdi mdi-plus"></i>
+                    İlk Ölkəni Yaradın
+                </a>
+            </div>
+        }
+    </div>
+</div>
